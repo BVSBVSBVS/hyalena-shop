@@ -1,0 +1,4 @@
+node_modules/
+.env
+baza.json
+.DS_Store

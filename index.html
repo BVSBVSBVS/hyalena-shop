@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYALENA | Cosmetic Line</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <style>
+        :root {
+            --dark-bg: #111111; --hero-bg: #4a4a4a; --text-dark: #1a1a1a; --text-muted: #666666;
+            --accent-gold: #cda052; --bg-light: #ffffff; --bg-offwhite: #fcfcfc; --border: #eaeaea;
+            --font-serif: 'Cormorant Garamond', serif; --font-sans: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-light); color: var(--text-dark); font-family: var(--font-sans); overflow-x: hidden; }
+
+        header { 
+            display: grid; 
+            grid-template-columns: 1fr auto 1fr; 
+            align-items: center; 
+            padding: 20px 5%; 
+            background: var(--bg-light); 
+            border-bottom: 1px solid var(--border); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+        
+        .nav-links { display: flex; gap: 25px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .nav-links a { text-decoration: none; color: inherit; cursor: pointer; transition: 0.3s; }
+        .nav-links a:hover { color: var(--text-dark); }
+        
+        .logo-wrapper { text-align: center; }
+        .logo { font-family: var(--font-serif); font-size: 32px; font-weight: 600; letter-spacing: 4px; text-decoration: none; color: var(--text-dark); text-transform: uppercase; }
+        
+        .cart-wrapper { display: flex; justify-content: flex-end; align-items: center; gap: 20px; }
+        .cart-btn { background: none; border: none; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 500; color: var(--text-dark); transition: color 0.3s;}
+        .cart-btn:hover { color: var(--accent-gold); }
+        .cart-badge { background: var(--text-dark); color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; }
+
+        .hero-slider-container { position: relative; width: 100%; min-height: 550px; background: var(--hero-bg); overflow: hidden; display: flex; align-items: center; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 80px 10%; opacity: 0; transition: opacity 0.8s ease-in-out; pointer-events: none; color: white; }
+        .slide.active { opacity: 1; pointer-events: auto; }
+        .hero-text { max-width: 500px; transform: translateY(20px); transition: 0.8s ease; opacity: 0; }
+        .slide.active .hero-text { transform: translateY(0); opacity: 1; }
+        .hero-subtitle { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #cccccc; margin-bottom: 15px; display: block; }
+        .hero-title { font-family: var(--font-serif); font-size: 4.5rem; font-weight: 400; margin-bottom: 15px; line-height: 1.1; }
+        .hero-desc { font-weight: 300; color: #dddddd; margin-bottom: 30px; font-size: 1rem; line-height: 1.6; }
+        .hero-price { font-family: var(--font-serif); font-size: 2rem; color: var(--accent-gold); margin-bottom: 30px; }
+        .btn-view { background: white; color: var(--text-dark); padding: 15px 30px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; border: none; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .btn-view:hover { background: var(--accent-gold); color: white; }
+        .hero-img-container { transform: translateX(30px); transition: 0.8s ease; opacity: 0; }
+        .slide.active .hero-img-container { transform: translateX(0); opacity: 1; }
+        .hero-img { width: 400px; height: 400px; object-fit: contain; box-shadow: 0 20px 50px rgba(0,0,0,0.3); background: white; padding: 20px; }
+        .slider-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; z-index: 10; }
+        .control-arrow { color: white; background: none; border: none; font-size: 18px; cursor: pointer; opacity: 0.7; transition: 0.3s; }
+        .control-arrow:hover { opacity: 1; }
+        .dots { display: flex; align-items: center; gap: 10px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: white; opacity: 0.4; cursor: pointer; transition: 0.3s; }
+        .dot.active { width: 30px; height: 2px; border-radius: 0; opacity: 1; }
+
+        .filters { display: flex; justify-content: center; gap: 15px; padding: 40px 5%; border-bottom: 1px solid var(--border); }
+        .filter-btn { padding: 8px 16px; border: 1px solid transparent; background: transparent; border-radius: 30px; cursor: pointer; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); transition: 0.3s; }
+        .filter-btn.active, .filter-btn:hover { background: var(--text-dark); color: white; }
+        .shop-container { padding: 60px 5%; max-width: 1400px; margin: auto; }
+        .product-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 40px; }
+        @media (min-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+        .product-card { transition: opacity 0.3s; text-align: center; border: 1px solid transparent; padding-bottom: 15px;}
+        .product-card:hover { border-color: var(--border); opacity: 0.9;}
+        .img-wrap { position: relative; background: #f4f4f4; height: 300px; margin-bottom: 15px; overflow: hidden; cursor: pointer; }
+        .main-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .img-wrap:hover .main-img { transform: scale(1.05); }
+        .product-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; background: var(--text-dark); color: white; padding: 5px 10px; position: absolute; top: 15px; left: 15px; z-index: 2; }
+        .prod-info { margin-bottom: 15px; padding: 0 10px; }
+        .prod-title { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 5px; text-transform: uppercase;}
+        .prod-price { font-weight: 500; font-size: 1rem; color: var(--accent-gold); }
+        .btn-add-grid { width: calc(100% - 20px); margin: 0 10px; padding: 12px; background-color: var(--text-dark); color: white; border: none; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+        .btn-add-grid:hover { background-color: var(--accent-gold); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .product-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 90%; max-width: 1000px; height: 80vh; background: var(--bg-light); z-index: 2001; display: flex; flex-wrap: wrap; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .product-modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 30px; background: none; border: none; cursor: pointer; z-index: 10; color: var(--text-dark); }
+        .modal-gallery { flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .modal-main-pic { width: 100%; height: 70%; object-fit: contain; margin-bottom: 20px; }
+        .thumb-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; width: 100%; justify-content: center;}
+        .thumb-img { width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+        .thumb-img:hover, .thumb-img.active { border-color: var(--accent-gold); }
+        .modal-details { flex: 1; min-width: 300px; padding: 50px 40px; overflow-y: auto; display: flex; flex-direction: column; }
+        .m-title { font-family: var(--font-serif); font-size: 2.5rem; text-transform: uppercase; margin-bottom: 10px; }
+        .m-price { font-size: 1.5rem; color: var(--accent-gold); font-weight: 600; margin-bottom: 30px; }
+        .m-desc { font-size: 1rem; line-height: 1.8; color: #444; margin-bottom: 30px; }
+        .btn-full { width: 100%; padding: 15px; background: var(--text-dark); color: white; border: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+        .btn-full:hover { background: var(--accent-gold); }
+
+        .about-section { background-color: var(--bg-offwhite); padding: 100px 5%; text-align: center; border-top: 1px solid var(--border); }
+        .about-subtitle { color: var(--accent-gold); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; margin-bottom: 20px; display: block; }
+        .about-title { font-family: var(--font-serif); font-size: 3.5rem; font-weight: 400; margin-bottom: 30px; color: var(--text-dark); }
+        .about-desc { max-width: 750px; margin: 0 auto 60px auto; font-size: 1.1rem; color: #444; line-height: 1.7; font-weight: 300; }
+        .stats-container { display: flex; justify-content: center; gap: 120px; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-number { font-family: var(--font-serif); font-size: 3.5rem; color: var(--accent-gold); margin-bottom: 5px; font-style: italic; }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+
+        .site-footer { background-color: var(--dark-bg); color: #cccccc; padding: 80px 5% 30px 5%; text-align: center; }
+        .footer-logo { font-family: var(--font-serif); color: #ffffff; font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 50px; font-weight: 600; text-transform: uppercase; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-width: 1000px; margin: auto; padding-bottom: 50px; border-bottom: 1px solid #222; }
+        .footer-desc { font-size: 0.9rem; line-height: 1.6; max-width: 300px; margin: 0 auto; color: #aaaaaa; }
+        .footer-title { color: #ffffff; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 25px; font-weight: 400; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #aaaaaa; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--accent-gold); }
+        .footer-contact p { margin-bottom: 12px; font-size: 0.9rem; color: #aaaaaa; }
+        .footer-bottom { text-align: center; padding-top: 30px; font-size: 0.75rem; color: #666666; }
+
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; opacity: 0; pointer-events: none; transition: 0.3s; }
+        .cart-overlay.active { opacity: 1; pointer-events: auto; }
+        .cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: var(--bg-light); z-index: 3001; display: flex; flex-direction: column; transition: 0.4s; }
+        .cart-drawer.active { right: 0; }
+        .cart-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .cart-items { flex-grow: 1; padding: 25px; overflow-y: auto; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
+        .cart-item-img { width: 60px; height: 60px; object-fit: cover; }
+        .cart-footer { padding: 25px; border-top: 1px solid var(--border); }
+        
+        #checkout-view { display: none; padding: 40px 5%; min-height: 80vh; }
+        .checkout-container { display: flex; flex-wrap: wrap; gap: 50px; max-width: 1200px; margin: auto; }
+        .checkout-form { flex: 1; min-width: 300px; }
+        .form-row { display: flex; gap: 20px; margin-bottom: 15px; }
+        .form-group { flex: 1; }
+        .form-group label { display: block; font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid var(--border); outline: none; font-family: var(--font-sans); }
+        .checkout-summary { flex: 1; min-width: 300px; background: #f9f9f9; padding: 40px; height: fit-content;}
+
+        .cookie-banner { position: fixed; bottom: -100%; left: 0; width: 100%; background-color: var(--dark-bg); color: #ccc; z-index: 9999; padding: 20px 5%; box-shadow: 0 -10px 30px rgba(0,0,0,0.3); transition: bottom 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .cookie-banner.show { bottom: 0; }
+        .cookie-content { max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
+        .cookie-content p { font-size: 0.85rem; line-height: 1.5; max-width: 700px; margin: 0; font-family: var(--font-sans); }
+        .cookie-buttons { display: flex; gap: 10px; }
+        .btn-cookie-outline { background: transparent; border: 1px solid #666; color: #ccc; padding: 10px 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+        .btn-cookie-outline:hover { border-color: var(--bg-light); color: var(--bg-light); }
+        .btn-cookie-solid { background: var(--accent-gold); border: 1px solid var(--accent-gold); color: var(--text-dark); padding: 10px 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-cookie-solid:hover { background: var(--bg-light); border-color: var(--bg-light); }
+
+        @media (max-width: 768px) {
+            header { grid-template-columns: 1fr auto; }
+            .nav-links { display: none; } 
+            .slide { flex-direction: column; text-align: center; padding: 40px 5%; justify-content: center; gap: 40px;}
+            .hero-img { width: 250px; height: 250px; }
+            .hero-title { font-size: 3.5rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+            .stats-container { gap: 40px; flex-direction: column; }
+            .cookie-buttons { width: 100%; justify-content: space-between; }
+            .cookie-buttons button { flex: 1; text-align: center; padding: 12px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-view">
+        <header>
+            <div class="nav-links">
+                <a onclick="window.scrollTo(0,0)">Početna</a>
+                <a href="#proizvodi">Proizvodi</a>
+            </div>
+            <div class="logo-wrapper">
+                <a href="#" class="logo">HYALENA</a>
+            </div>
+            <div class="cart-wrapper">
+                <button class="cart-btn" onclick="openAuthModal()" title="Moj nalog">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <button class="cart-btn" onclick="openCart()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </button>
+            </div>
+        </header>
+
+        <section class="hero-slider-container">
+            <div class="slide active">
+                <div class="hero-text">
+                    <span class="hero-subtitle">Hyalena Collection</span>
+                    <h1 class="hero-title">Gold Essence</h1>
+                    <p class="hero-desc">Serum sa česticama zlata za blistav ten. Brzo se upija i ostavlja kožu vidno zategnutijom.</p>
+                    <div class="hero-price">2.950 RSD</div>
+                    <button class="btn-view" onclick="fastAdd('gold')">Pogledaj proizvod <span>&rarr;</span></button>
+                </div>
+                <div class="hero-img-container"><img src="assets/gold/1.png" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600'"></div>
+            </div>
+            <div class="slide">
+                <div class="hero-text">
+                    <span class="hero-subtitle">Hyalena Collection</span>
+                    <h1 class="hero-title">Noćna Krema</h1>
+                    <p class="hero-desc">Dubinska regeneracija dok spavate. Premium formulacija za potpunu rehidrataciju kože.</p>
+                    <div class="hero-price">2.350 RSD</div>
+                    <button class="btn-view" onclick="fastAdd('nocna')">Pogledaj proizvod <span>&rarr;</span></button>
+                </div>
+                <div class="hero-img-container"><img src="assets/nocna/1.png" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1629198688000-71f23e745b6e?w=800'"></div>
+            </div>
+            <div class="slide">
+                <div class="hero-text">
+                    <span class="hero-subtitle">Hyalena Collection</span>
+                    <h1 class="hero-title">Marmelada</h1>
+                    <p class="hero-desc">Premium marmelada za savršen bronzani ten. Sadrži prirodna ulja šargarepe i oraha.</p>
+                    <div class="hero-price">3.450 RSD</div>
+                    <button class="btn-view" onclick="fastAdd('marmelada')">Pogledaj proizvod <span>&rarr;</span></button>
+                </div>
+                <div class="hero-img-container"><img src="assets/marmelada/1.png" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1615397323114-188b209d84c0?w=600'"></div>
+            </div>
+            <div class="slider-controls">
+                <button class="control-arrow" onclick="prevSlide()">&#10094;</button>
+                <div class="dots"><span class="dot active" onclick="goToSlide(0)"></span><span class="dot" onclick="goToSlide(1)"></span><span class="dot" onclick="goToSlide(2)"></span></div>
+                <button class="control-arrow" onclick="nextSlide()">&#10095;</button>
+            </div>
+        </section>
+
+        <div class="filters" id="proizvodi">
+            <button class="filter-btn active" onclick="filterData('sve', this)">Svi Proizvodi</button>
+            <button class="filter-btn" onclick="filterData('kreme', this)">Kreme</button>
+            <button class="filter-btn" onclick="filterData('serumi', this)">Serumi</button>
+            <button class="filter-btn" onclick="filterData('marmelada', this)">Marmelada</button>
+        </div>
+
+        <section class="shop-container">
+            <div class="product-grid" id="product-grid">
+                
+                <div class="product-card" data-cat="kreme">
+                    <div class="img-wrap" onclick="openModal('dnevna')">
+                        <span class="product-tag">Krema</span>
+                        <img src="assets/dnevna/1.png" class="main-img" onerror="this.src='https://images.unsplash.com/photo-1617897903246-719242758050?w=600'">
+                    </div>
+                    <div class="prod-info"><h3 class="prod-title">Dnevna Krema</h3><div class="prod-price">2.350 RSD</div></div>
+                    <button class="btn-add-grid" onclick="fastAdd('dnevna')">Dodaj u korpu</button>
+                </div>
+
+                <div class="product-card" data-cat="kreme">
+                    <div class="img-wrap" onclick="openModal('nocna')">
+                        <span class="product-tag">Krema</span>
+                        <img src="assets/nocna/1.png" class="main-img" onerror="this.src='https://images.unsplash.com/photo-1629198688000-71f23e745b6e?w=600'">
+                    </div>
+                    <div class="prod-info"><h3 class="prod-title">Noćna Krema</h3><div class="prod-price">2.350 RSD</div></div>
+                    <button class="btn-add-grid" onclick="fastAdd('nocna')">Dodaj u korpu</button>
+                </div>
+
+                <div class="product-card" data-cat="serumi">
+                    <div class="img-wrap" onclick="openModal('gold')">
+                        <span class="product-tag">Serum</span>
+                        <img src="assets/gold/1.jpg" class="main-img" onerror="this.src='https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600'">
+                    </div>
+                    <div class="prod-info"><h3 class="prod-title">Gold Essence</h3><div class="prod-price">2.950 RSD</div></div>
+                    <button class="btn-add-grid" onclick="fastAdd('gold')">Dodaj u korpu</button>
+                </div>
+
+                <div class="product-card" data-cat="serumi">
+                    <div class="img-wrap" onclick="openModal('cellhydra')">
+                        <span class="product-tag">Serum</span>
+                        <img src="assets/cellhydra/1.jpg" class="main-img" onerror="this.src='https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600'">
+                    </div>
+                    <div class="prod-info"><h3 class="prod-title">CellHydra+</h3><div class="prod-price">2.350 RSD</div></div>
+                    <button class="btn-add-grid" onclick="fastAdd('cellhydra')">Dodaj u korpu</button>
+                </div>
+
+                <div class="product-card" data-cat="marmelada">
+                    <div class="img-wrap" onclick="openModal('marmelada')">
+                        <span class="product-tag">Marmelada</span>
+                        <img src="assets/marmelada/1.jpg" class="main-img" onerror="this.src='https://images.unsplash.com/photo-1615397323114-188b209d84c0?w=600'">
+                    </div>
+                    <div class="prod-info"><h3 class="prod-title">Marmelada</h3><div class="prod-price">3.450 RSD</div></div>
+                    <button class="btn-add-grid" onclick="fastAdd('marmelada')">Dodaj u korpu</button>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="about-section">
+            <span class="about-subtitle">Nauka & Ritual</span>
+            <h2 class="about-title">Nega kože je ritual svetlosti</h2>
+            <p class="about-desc">Hyalena je premijum kozmetički brend koji spaja nauku i eleganciju. Svaki naš proizvod je pažljivo formulisan sa najčistijim aktivnim sastojcima — hijaluronskom kiselinom, peptidima i botaničkim ekstraktima — kako bi vaša koža dobila dubinsku negu i blistav sjaj koji zaslužuje.</p>
+            <div class="stats-container">
+                <div class="stat-item"><div class="stat-number">98%</div><div class="stat-label">Prirodni sastojci</div></div>
+                <div class="stat-item"><div class="stat-number">5</div><div class="stat-label">Premium proizvoda</div></div>
+                <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Dermatološki testirano</div></div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-logo">HYALENA</div>
+            <div class="footer-grid">
+                <div>
+                    <p class="footer-desc">Premijum kozmetički brend posvećen nauci i ritualu nege kože. Svaki proizvod je formulisan sa najčistijim sastojcima.</p>
+                </div>
+                <div>
+                    <h4 class="footer-title">Navigacija</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Početna</a></li>
+                        <li><a href="#proizvodi">Proizvodi</a></li>
+                        <li><a onclick="openAuthModal()" style="cursor:pointer;">Moj nalog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-title">Kontakt</h4>
+                    <div class="footer-contact">
+                        <p>info@hyalena.rs</p>
+                        <p>+381 11 123 4567</p>
+                        <p>Beograd, Srbija</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">&copy; 2026 Hyalena. Sva prava zadržana.</div>
+        </footer>
+    </div>
+
+    <div class="modal-overlay" id="auth-overlay" onclick="closeAuthModal()"></div>
+    <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+        <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+        <h2 style="font-family: var(--font-serif); margin-bottom: 20px; font-size: 2rem;" id="auth-title">Prijava</h2>
+        <div style="width: 100%;">
+            <div class="form-group"><label>Email adresa</label><input type="email" id="auth-email" class="form-input" placeholder="npr. marina@primer.com"></div>
+            <div class="form-group"><label>Lozinka</label><input type="password" id="auth-pass" class="form-input" placeholder="Unesite lozinku"></div>
+            <button class="btn-full" style="margin-top: 20px;" id="auth-btn" onclick="handleAuth()">Prijavi se</button>
+            <p style="text-align: center; margin-top: 15px; font-size: 13px; cursor: pointer; text-decoration: underline; color: var(--text-muted);" onclick="toggleAuthMode()" id="auth-toggle">Nemate nalog? Registrujte se ovde.</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+    <div class="product-modal" id="product-modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-gallery">
+            <img id="m-main-img" class="modal-main-pic" src="">
+            <div class="thumb-row" id="m-thumbnails"></div>
+        </div>
+        <div class="modal-details">
+            <h2 class="m-title" id="m-title">Ime Proizvoda</h2>
+            <div class="m-price" id="m-price">0 RSD</div>
+            <div class="m-desc" id="m-desc">Opširan tekst...</div>
+            <button class="btn-full" id="m-add-btn" style="margin-top: auto;">Dodaj u korpu</button>
+        </div>
+    </div>
+
+    <div id="checkout-view">
+        <div style="max-width: 1200px; margin: auto; margin-bottom: 20px;"><a onclick="showMainView()" style="cursor: pointer; color: var(--text-muted); text-decoration: underline; font-size: 13px;">← Nazad na kupovinu</a></div>
+        <div class="checkout-container">
+            <div class="checkout-form">
+                <h1 style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 30px;">Plaćanje</h1>
+                <div class="form-group" style="margin-bottom: 15px;"><label>Ime i Prezime *</label><input type="text" id="c-name" class="form-input" placeholder="npr. Marina Marinković"></div>
+                <div class="form-row"><div class="form-group"><label>Email adresa *</label><input type="email" id="c-email" class="form-input" placeholder="npr. marina@primer.com"></div><div class="form-group"><label>Telefon *</label><input type="tel" id="c-phone" class="form-input" placeholder="npr. 064 123 4567"></div></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label>Adresa i broj *</label><input type="text" id="c-address" class="form-input" placeholder="npr. Knez Mihailova 10"></div>
+                <div class="form-row"><div class="form-group"><label>Grad *</label><input type="text" id="c-city" class="form-input" placeholder="npr. Beograd"></div><div class="form-group"><label>Poštanski broj *</label><input type="text" id="c-zip" class="form-input" placeholder="npr. 11000"></div></div>
+                <div style="background: #f4f4f4; padding: 20px; border-left: 3px solid var(--text-dark); margin: 30px 0; font-size: 13px;"><strong>NAČIN PLAĆANJA:</strong> Pouzećem (Gotovinom prilikom preuzimanja paketa).</div>
+                <button class="btn-full" onclick="finishOrder()">Potvrdi porudžbinu</button>
+            </div>
+            <div class="checkout-summary"><h3 style="font-family: var(--font-serif); margin-bottom: 20px;">Pregled porudžbine</h3><div id="checkout-items-list"></div><div class="summary-row" style="margin-top: 20px;"><span>Dostava</span><strong>Besplatna</strong></div><div class="summary-row summary-total"><span>Ukupno</span><span id="checkout-total-price">0 RSD</span></div></div>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header"><h2 style="font-family: var(--font-serif); font-weight: 400;">Korpa</h2><button onclick="closeCart()" style="background:none; border:none; font-size:24px;">&times;</button></div>
+        <div class="cart-items" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; font-family: var(--font-serif); font-size: 1.2rem; margin-bottom:20px;"><span>Ukupno:</span><span id="cart-total-price">0 RSD</span></div>
+            <button class="btn-full" onclick="goToCheckout()">Nastavi na plaćanje</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="custom-alert-overlay"></div>
+    <div class="product-modal" id="custom-alert-modal" style="max-width: 400px; height: auto; padding: 40px 30px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <p id="custom-alert-text" style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 25px; line-height: 1.4;"></p>
+        <div style="display: flex; gap: 15px; width: 100%; justify-content: center;" id="custom-alert-buttons"></div>
+    </div>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-content">
+            <p>Ovaj sajt koristi kolačiće (cookies) kako bi Vam pružio najbolje korisničko iskustvo, analizirao saobraćaj i personalizovao sadržaj u skladu sa Zakonom o zaštiti podataka o ličnosti. <a href="#" style="color: var(--accent-gold); text-decoration: underline;">Saznajte više</a>.</p>
+            <div class="cookie-buttons">
+                <button class="btn-cookie-outline" onclick="acceptCookies('essential')">Samo neophodni</button>
+                <button class="btn-cookie-solid" onclick="acceptCookies('all')">Prihvatam sve</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const productsDB = {
+            'dnevna': { name: 'Allure Dnevna Krema', price: 2350, desc: '<strong>Savršena dnevna rutina.</strong><br><br>Hyalena dnevna krema pruža dubinsku hidrataciju i formira zaštitni sloj na koži. Bogata peptidima i zaštitnim faktorom, idealna je kao podloga za šminku. Ne ostavlja masan trag.<br><br><em>Sastojci:</em> Arganovo ulje, Hyaluronic Acid, Peptides.', images: ['assets/dnevna/1.png', 'assets/dnevna/2.jpg', 'assets/dnevna/3.jpg', 'assets/dnevna/4.jpg', 'assets/dnevna/5.jpg'] },
+            'nocna': { name: 'Allure Noćna Krema', price: 2350, desc: '<strong>Regeneracija dok spavate.</strong><br><br>Bogata anti-age formula za noćnu regeneraciju. Dok spavate, aktivni sastojci obnavljaju ćelije i vraćaju koži elastičnost. Smanjuje vidljivost finih linija.', images: ['assets/nocna/1.png', 'assets/nocna/2.png', 'assets/nocna/3.jpg', 'assets/nocna/4.jpg', 'assets/nocna/5.jpg'] },
+            'gold': { name: 'Allure Gold Essence', price: 2950, desc: '<strong>Luksuz u bočici.</strong><br><br>Visoko koncentrovani serum sa 24k česticama zlata. Osvetuljuje ten, smanjuje hiperpigmentaciju i daje trenutni glow efekat.', images: ['assets/gold/1.png', 'assets/gold/2.png', 'assets/gold/3.png', 'assets/gold/4.png', 'assets/gold/5.png'] },
+            'cellhydra': { name: 'Allure CellHydra+', price: 2350, desc: '<strong>Intenzivna hidracija.</strong><br><br>Serum sa 3 različite molekularne težine hijalurona kako bi prodro u sve slojeve kože. Popunjava bore iznutra.', images: ['assets/cellhydra/1.jpg', 'assets/cellhydra/2.jpg', 'assets/cellhydra/3.jpg', 'assets/cellhydra/4.jpg', 'assets/cellhydra/5.jpg'] },
+            'marmelada': { name: 'Marmelada', price: 3450, desc: '<strong>Brzo tamnjenje.</strong><br><br>Premium marmelada za brzo dobijanje bronzanog tena. Obogaćena uljem šargarepe, oraha i kakao puterom. Ne sadrži UV filtere.', images: ['assets/marmelada/1.png', 'assets/marmelada/2.png', 'assets/marmelada/3.png'] }
+        };
+
+        function customAlert(message) {
+            document.getElementById('custom-alert-text').innerText = message;
+            document.getElementById('custom-alert-buttons').innerHTML = `<button class="btn-full" onclick="closeCustomAlert()">U redu</button>`;
+            document.getElementById('custom-alert-overlay').classList.add('active');
+            document.getElementById('custom-alert-modal').classList.add('active');
+        }
+
+        function customConfirm(message, onConfirmCallback) {
+            document.getElementById('custom-alert-text').innerText = message;
+            document.getElementById('custom-alert-buttons').innerHTML = `<button class="btn-cookie-outline" style="width:100%" onclick="closeCustomAlert()">Odustani</button><button class="btn-full" style="width:100%" id="confirm-btn">Da</button>`;
+            document.getElementById('confirm-btn').onclick = () => { closeCustomAlert(); onConfirmCallback(); };
+            document.getElementById('custom-alert-overlay').classList.add('active');
+            document.getElementById('custom-alert-modal').classList.add('active');
+        }
+
+        function closeCustomAlert() { document.getElementById('custom-alert-overlay').classList.remove('active'); document.getElementById('custom-alert-modal').classList.remove('active'); }
+
+        let cart = [];
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        function showSlide(index) { slides.forEach((s, i) => { s.classList.remove('active'); dots[i].classList.remove('active'); }); slides[index].classList.add('active'); dots[index].classList.add('active'); currentSlide = index; }
+        function nextSlide() { showSlide((currentSlide + 1) % slides.length); }
+        function prevSlide() { showSlide((currentSlide - 1 + slides.length) % slides.length); }
+        function goToSlide(index) { showSlide(index); }
+        setInterval(nextSlide, 5000);
+
+        function openModal(id) {
+            const item = productsDB[id];
+            document.getElementById('m-title').innerText = item.name; document.getElementById('m-price').innerText = item.price.toLocaleString() + ' RSD'; document.getElementById('m-desc').innerHTML = item.desc; document.getElementById('m-main-img').src = item.images[0];
+            let thumbsHTML = ''; item.images.forEach((imgSrc, index) => { const activeClass = index === 0 ? 'active' : ''; thumbsHTML += `<img src="${imgSrc}" class="thumb-img ${activeClass}" onclick="changeModalPic('${imgSrc}', this)">`; });
+            document.getElementById('m-thumbnails').innerHTML = thumbsHTML; document.getElementById('m-add-btn').onclick = () => { fastAdd(id); closeModal(); }; document.getElementById('modal-overlay').classList.add('active'); document.getElementById('product-modal').classList.add('active');
+        }
+        function changeModalPic(src, thumbElement) { document.getElementById('m-main-img').src = src; document.querySelectorAll('.thumb-img').forEach(el => el.classList.remove('active')); thumbElement.classList.add('active'); }
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); document.getElementById('product-modal').classList.remove('active'); }
+
+        function fastAdd(id) {
+            let itemData = productsDB[id]; let existing = cart.find(item => item.id === id);
+            if(existing) { existing.qty += 1; } else { cart.push({ id: id, name: itemData.name, price: itemData.price, img: itemData.images[0], qty: 1 }); }
+            updateCartUI(); openCart();
+        }
+        function changeQty(id, delta) { let item = cart.find(i => i.id === id); if(item) { item.qty += delta; if(item.qty <= 0) cart = cart.filter(i => i.id !== id); updateCartUI(); } }
+        
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+            let container = document.getElementById('cart-items-container'); let checkoutList = document.getElementById('checkout-items-list'); let total = 0; container.innerHTML = cart.length === 0 ? '<p style="text-align:center;">Prazno</p>' : ''; checkoutList.innerHTML = '';
+            cart.forEach(item => {
+                total += (item.price * item.qty);
+                container.innerHTML += `<div class="cart-item"><img src="${item.img}" class="cart-item-img"><div><div style="font-weight:600; font-family:var(--font-serif);">${item.name}</div><div style="font-size:0.9rem; color:var(--text-muted);">${item.price} RSD</div><div style="display:flex; gap:10px; border:1px solid #ccc; padding:2px 5px; width:fit-content; margin-top:5px;"><button onclick="changeQty('${item.id}', -1)" style="border:none; background:none; cursor:pointer;">-</button><span>${item.qty}</span><button onclick="changeQty('${item.id}', 1)" style="border:none; background:none; cursor:pointer;">+</button></div></div></div>`;
+                checkoutList.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${item.name} (x${item.qty})</span><strong>${item.price * item.qty} RSD</strong></div>`;
+            });
+            document.getElementById('checkout-total-price').innerText = total.toLocaleString() + ' RSD'; document.getElementById('cart-total-price').innerText = total.toLocaleString() + ' RSD';
+        }
+
+        function openCart() { document.getElementById('cart-overlay').classList.add('active'); document.getElementById('cart-drawer').classList.add('active'); }
+        function closeCart() { document.getElementById('cart-overlay').classList.remove('active'); document.getElementById('cart-drawer').classList.remove('active'); }
+        function goToCheckout() { if(cart.length === 0) return; closeCart(); document.getElementById('main-view').style.display = 'none'; document.getElementById('checkout-view').style.display = 'block'; window.scrollTo(0, 0); }
+        function showMainView() { document.getElementById('checkout-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
+        function filterData(kat, btn) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.product-card').forEach(card => { if(kat === 'sve' || card.getAttribute('data-cat') === kat) card.style.display = 'block'; else card.style.display = 'none'; }); }
+
+        let isRegisterMode = false;
+        let currentUser = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedUser = localStorage.getItem('hyalena_user');
+            if(savedUser) { currentUser = savedUser; document.getElementById('c-email').value = savedUser; }
+        });
+
+        function openAuthModal() {
+            if(currentUser) {
+                customConfirm(`Prijavljeni ste na nalog: ${currentUser}. Želite li da se odjavite?`, () => {
+                    currentUser = null; localStorage.removeItem('hyalena_user'); document.getElementById('c-email').value = ''; customAlert("Uspešno ste se odjavili.");
+                }); return;
+            }
+            document.getElementById('auth-overlay').classList.add('active'); document.getElementById('auth-modal').classList.add('active');
+        }
+        
+        function closeAuthModal() { document.getElementById('auth-overlay').classList.remove('active'); document.getElementById('auth-modal').classList.remove('active'); }
+        function toggleAuthMode() { isRegisterMode = !isRegisterMode; document.getElementById('auth-title').innerText = isRegisterMode ? "Registracija" : "Prijava"; document.getElementById('auth-btn').innerText = isRegisterMode ? "Registruj se" : "Prijavi se"; document.getElementById('auth-toggle').innerText = isRegisterMode ? "Imate nalog? Prijavite se ovde." : "Nemate nalog? Registrujte se ovde."; }
+
+        async function handleAuth() {
+            let email = document.getElementById('auth-email').value;
+            let pass = document.getElementById('auth-pass').value;
+            if(!email || !pass) { customAlert("Molimo Vas unesite email i lozinku."); return; }
+            
+            try {
+                customAlert("Uspešno ste se prijavili!"); 
+                currentUser = email; 
+                localStorage.setItem('hyalena_user', email); 
+                document.getElementById('c-email').value = email; 
+                closeAuthModal();
+            } catch (err) { customAlert("Greška pri povezivanju."); }
+        }
+
+        // --- STVARNO NARUČIVANJE PREKO EMAILJS (DUPLI MEJL) ---
+        async function finishOrder() {
+            let ime = document.getElementById('c-name').value;
+            let email = document.getElementById('c-email').value;
+            let telefon = document.getElementById('c-phone').value;
+            let adresa = document.getElementById('c-address').value;
+            let grad = document.getElementById('c-city').value;
+            let postanskiBroj = document.getElementById('c-zip').value; 
+
+            if(!ime || !email || !telefon || !adresa || !grad || !postanskiBroj) { 
+                customAlert("Molimo Vas popunite sva obavezna polja."); 
+                return; 
+            }
+            if(cart.length === 0) { 
+                customAlert("Vaša korpa je trenutno prazna."); 
+                return; 
+            }
+
+            let ukupnoVal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            let korpaTekst = cart.map(item => `${item.name} (x${item.qty}) - ${item.price * item.qty} RSD`).join('\n');
+
+            const templateParams = {
+                ime_kupca: ime,
+                email_kupca: email,
+                telefon: telefon,
+                adresa: `${adresa}, ${grad} ${postanskiBroj}`,
+                porudzbina: korpaTekst,
+                ukupno: ukupnoVal.toLocaleString()
+            };
+
+            customAlert("Obrađujemo Vašu porudžbinu... Molimo sačekajte.");
+
+            try {
+                // INICIJALIZACIJA - DODAJ SVOJ PUBLIC KEY OVDE
+                emailjs.init("TVOJ_PUBLIC_KEY"); 
+
+                // 1. ŠALJEMO VLASNIKU (HYALENA) - DODAJ SVOJ SERVICE ID I TEMPLATE ID ZA VLASNIKA
+                await emailjs.send("service_rqbgfco", "ID_SABLONA_ZA_VLASNIKA", templateParams);
+
+                // 2. ŠALJEMO KUPCU (POTVRDA) - DODAJ SVOJ SERVICE ID I TEMPLATE ID ZA KUPCA
+                await emailjs.send("service_rqbgfco", "ID_SABLONA_ZA_KUPCA", templateParams);
+
+                customAlert("Hvala! Porudžbina je uspešno poslata. Proverite Vaš email za potvrdu.");
+                cart = []; 
+                updateCartUI(); 
+                showMainView(); 
+                
+                // Reset forme
+                document.getElementById('c-name').value = '';
+                document.getElementById('c-phone').value = '';
+                document.getElementById('c-address').value = '';
+                document.getElementById('c-city').value = '';
+                document.getElementById('c-zip').value = '';
+
+            } catch (error) {
+                console.error("Greška:", error);
+                customAlert("Došlo je do greške. Proverite internet konekciju.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!localStorage.getItem('hyalena_cookie_consent_v2')) { 
+                setTimeout(() => { document.getElementById('cookie-banner').classList.add('show'); }, 1500); 
+            }
+        });
+        function acceptCookies(type) { 
+            localStorage.setItem('hyalena_cookie_consent_v2', type); 
+            document.getElementById('cookie-banner').classList.remove('show'); 
+        }
+    </script>
+</body>
+</html>
