@@ -523,36 +523,27 @@
                 ukupno: ukupnoVal.toLocaleString()
             };
 
-            customAlert("Obrađujemo Vašu porudžbinu... Molimo sačekajte.");
+            customAlert("Obrađujemo Vašu porudžbinu...");
 
             try {
-                // INICIJALIZACIJA - DODAJ SVOJ PUBLIC KEY OVDE
-                emailjs.init("U80vBRCLZ_otkjVct"); 
+                // OBAVEZNO PROVERI DA LI SU OVI KLJUČEVI TU:
+                emailjs.init("TVOJ_PUBLIC_KEY"); 
 
-                // 1. ŠALJEMO VLASNIKU (HYALENA) - DODAJ SVOJ SERVICE ID I TEMPLATE ID ZA VLASNIKA
-                await emailjs.send("service_rqbgfco", "service_rqbgfco", templateParams);
+                // 1. ŠALJEMO VLASNIKU
+                await emailjs.send("service_rqbgfco", "ID_SABLONA_VLASNIK", templateParams);
 
-                // 2. ŠALJEMO KUPCU (POTVRDA) - DODAJ SVOJ SERVICE ID I TEMPLATE ID ZA KUPCA
-                await emailjs.send("service_rqbgfco", "service_ddypbi1", templateParams);
+                // 2. ŠALJEMO KUPCU
+                await emailjs.send("service_rqbgfco", "ID_SABLONA_KUPAC", templateParams);
 
-                customAlert("Hvala! Porudžbina je uspešno poslata. Proverite Vaš email za potvrdu.");
+                customAlert("Hvala! Porudžbina je uspešno poslata.");
                 cart = []; 
                 updateCartUI(); 
                 showMainView(); 
-                
-                // Reset forme
-                document.getElementById('c-name').value = '';
-                document.getElementById('c-phone').value = '';
-                document.getElementById('c-address').value = '';
-                document.getElementById('c-city').value = '';
-                document.getElementById('c-zip').value = '';
-
             } catch (error) {
                 console.error("Greška:", error);
                 customAlert("Došlo je do greške. Proverite internet konekciju.");
             }
         }
-
         document.addEventListener("DOMContentLoaded", () => {
             if (!localStorage.getItem('hyalena_cookie_consent_v2')) { 
                 setTimeout(() => { document.getElementById('cookie-banner').classList.add('show'); }, 1500); 
