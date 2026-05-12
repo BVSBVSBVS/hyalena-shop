@@ -526,19 +526,27 @@
             customAlert("Obrađujemo Vašu porudžbinu...");
 
             try {
-                // OBAVEZNO PROVERI DA LI SU OVI KLJUČEVI TU:
-                emailjs.init("TVOJ_PUBLIC_KEY"); 
+                // INICIJALIZACIJA SA TVOJIM JAVNIM KLJUČEM
+                emailjs.init("U80vBRCLZ_otkjVct"); 
 
-                // 1. ŠALJEMO VLASNIKU
-                await emailjs.send("service_rqbgfco", "ID_SABLONA_VLASNIK", templateParams);
+                // 1. ŠALJEMO VLASNIKU (HYALENA)
+                await emailjs.send("service_rqbgfco", "template_d9llsr8", templateParams);
 
-                // 2. ŠALJEMO KUPCU
-                await emailjs.send("service_rqbgfco", "ID_SABLONA_KUPAC", templateParams);
+                // 2. ŠALJEMO KUPCU (POTVRDA)
+                await emailjs.send("service_rqbgfco", "template_l8o1bis", templateParams);
 
-                customAlert("Hvala! Porudžbina je uspešno poslata.");
+                customAlert("Hvala! Porudžbina je uspešno poslata. Proverite Vaš email za potvrdu.");
                 cart = []; 
                 updateCartUI(); 
                 showMainView(); 
+                
+                // Reset forme
+                document.getElementById('c-name').value = '';
+                document.getElementById('c-phone').value = '';
+                document.getElementById('c-address').value = '';
+                document.getElementById('c-city').value = '';
+                document.getElementById('c-zip').value = '';
+
             } catch (error) {
                 console.error("Greška:", error);
                 customAlert("Došlo je do greške. Proverite internet konekciju.");
