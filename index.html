@@ -13,19 +13,23 @@
 
     <div id="main-view">
         <header>
-            <div class="nav-links">
-                <a onclick="window.scrollTo(0,0)">Početna</a>
-                <a href="#proizvodi">Proizvodi</a>
+            <div class="header-left">
+                <button class="hamburger-btn" onclick="toggleMobileMenu()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="nav-links">
+                    <a onclick="window.scrollTo(0,0)">Početna</a>
+                    <a href="#proizvodi">Proizvodi</a>
+                </div>
             </div>
+            
             <div class="logo-wrapper">
                 <a href="#" class="logo">HYALENA</a>
             </div>
+            
             <div class="cart-wrapper">
-                <button class="cart-btn" onclick="openAuthModal()" title="Moj nalog">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                <button class="cart-btn desktop-auth" onclick="openAuthModal()" title="Moj nalog">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </button>
                 <button class="cart-btn" onclick="openCart()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
@@ -168,6 +172,30 @@
         </footer>
     </div>
 
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu-drawer" id="mobile-menu-drawer">
+        <div class="mobile-menu-header">
+            <span style="font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 2px;">MENI</span>
+            <button onclick="toggleMobileMenu()" style="background:none; border:none; font-size:30px; cursor:pointer; color: var(--text-dark);">&times;</button>
+        </div>
+        <div class="mobile-menu-links">
+            <div class="mobile-dropdown">
+                <button class="mobile-dropdown-btn" onclick="toggleMobileDropdown()">Proizvodi <span id="dropdown-arrow" style="font-size: 12px; margin-left: 5px;">▼</span></button>
+                <div class="mobile-dropdown-content" id="mobile-dropdown-content">
+                    <a onclick="mobFilter('sve')">Svi proizvodi</a>
+                    <a onclick="mobFilter('kreme')">Kreme</a>
+                    <a onclick="mobFilter('serumi')">Serumi</a>
+                    <a onclick="mobFilter('marmelada')">Marmelada</a>
+                </div>
+            </div>
+            <a href="#proizvodi" onclick="toggleMobileMenu()">Best Seller</a>
+            <a href="#proizvodi" onclick="toggleMobileMenu()">Akcija</a>
+            <a onclick="toggleMobileMenu(); openAuthModal();">Profil</a>
+            <a onclick="toggleMobileMenu(); openCart();">Korpa</a>
+            <a onclick="toggleMobileMenu(); window.scrollTo(0, document.body.scrollHeight);">O nama</a>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="auth-overlay" onclick="closeAuthModal()"></div>
     <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 40px; display: flex; flex-direction: column; align-items: center;">
         <button class="modal-close" onclick="closeAuthModal()">&times;</button>
@@ -298,24 +326,29 @@
         function goToSlide(index) { showSlide(index); }
         setInterval(nextSlide, 5000);
 
+        // POBOLJŠAN SWIPE ZA TELEFON
         const sliderContainer = document.querySelector('.hero-slider-container');
         let touchStartX = 0;
         let touchEndX = 0;
 
-        function checkDirection() {
-            if (touchStartX - touchEndX > 50) nextSlide();
-            if (touchEndX - touchStartX > 50) prevSlide();
-        }
-
         if (sliderContainer) {
             sliderContainer.addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX;
+                touchStartX = e.touches[0].clientX;
             }, { passive: true });
 
             sliderContainer.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].screenX;
-                checkDirection();
+                touchEndX = e.changedTouches[0].clientX;
+                handleSwipe();
             }, { passive: true });
+        }
+
+        function handleSwipe() {
+            let swipeDistance = touchStartX - touchEndX;
+            if (swipeDistance > 40) {
+                nextSlide();
+            } else if (swipeDistance < -40) {
+                prevSlide();
+            }
         }
 
         function openModal(id) {
@@ -418,13 +451,8 @@
             customAlert("Obrađujemo Vašu porudžbinu...");
 
             try {
-                // INICIJALIZACIJA SA TVOJIM JAVNIM KLJUČEM
                 emailjs.init("U80vBRCLZ_otkjVct"); 
-
-                // 1. ŠALJEMO VLASNIKU (HYALENA)
                 await emailjs.send("service_rqbgfco", "template_d9llsr8", templateParams);
-
-                // 2. ŠALJEMO KUPCU (POTVRDA)
                 await emailjs.send("service_rqbgfco", "template_l8o1bis", templateParams);
 
                 customAlert("Hvala! Porudžbina je uspešno poslata. Proverite Vaš email za potvrdu.");
@@ -432,7 +460,6 @@
                 updateCartUI(); 
                 showMainView(); 
                 
-                // Reset forme
                 document.getElementById('c-name').value = '';
                 document.getElementById('c-phone').value = '';
                 document.getElementById('c-address').value = '';
@@ -452,6 +479,30 @@
         function acceptCookies(type) { 
             localStorage.setItem('hyalena_cookie_consent_v2', type); 
             document.getElementById('cookie-banner').classList.remove('show'); 
+        }
+
+        // LOGIKA ZA MOBILNI MENI
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu-overlay').classList.toggle('active');
+            document.getElementById('mobile-menu-drawer').classList.toggle('active');
+        }
+
+        function toggleMobileDropdown() {
+            document.getElementById('mobile-dropdown-content').classList.toggle('active');
+            let arrow = document.getElementById('dropdown-arrow');
+            arrow.innerText = arrow.innerText === '▼' ? '▲' : '▼';
+        }
+
+        function mobFilter(kat) {
+            toggleMobileMenu(); 
+            let btn;
+            if(kat === 'sve') btn = document.querySelectorAll('.filter-btn')[0];
+            else if(kat === 'kreme') btn = document.querySelectorAll('.filter-btn')[1];
+            else if(kat === 'serumi') btn = document.querySelectorAll('.filter-btn')[2];
+            else if(kat === 'marmelada') btn = document.querySelectorAll('.filter-btn')[3];
+            
+            if(btn) filterData(kat, btn); 
+            window.location.href = "#proizvodi"; 
         }
     </script>
 </body>
