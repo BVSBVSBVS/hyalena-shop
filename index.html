@@ -86,7 +86,7 @@
         <section class="shop-container">
             <div class="product-grid" id="product-grid">
                 
-                <div class="product-card" data-cat="kreme">
+                <div class="product-card" data-cat="kreme" data-id="dnevna">
                     <div class="img-wrap" onclick="openModal('dnevna')">
                         <span class="product-tag">Krema</span>
                         <img src="assets/dnevna/dnevna1.jpg" class="main-img" alt="Dnevna Krema">
@@ -95,7 +95,7 @@
                     <button class="btn-add-grid" onclick="fastAdd('dnevna')">Dodaj u korpu</button>
                 </div>
 
-                <div class="product-card" data-cat="kreme">
+                <div class="product-card" data-cat="kreme" data-id="nocna">
                     <div class="img-wrap" onclick="openModal('nocna')">
                         <span class="product-tag">Krema</span>
                         <img src="assets/nocna/nocna1.jpg" class="main-img" alt="Noćna Krema">
@@ -104,7 +104,7 @@
                     <button class="btn-add-grid" onclick="fastAdd('nocna')">Dodaj u korpu</button>
                 </div>
 
-                <div class="product-card" data-cat="serumi">
+                <div class="product-card" data-cat="serumi" data-id="gold">
                     <div class="img-wrap" onclick="openModal('gold')">
                         <span class="product-tag">Serum</span>
                         <img src="assets/gold/gold1.jpg" class="main-img" alt="Gold Essence">
@@ -113,7 +113,7 @@
                     <button class="btn-add-grid" onclick="fastAdd('gold')">Dodaj u korpu</button>
                 </div>
 
-                <div class="product-card" data-cat="serumi">
+                <div class="product-card" data-cat="serumi" data-id="cellhydra">
                     <div class="img-wrap" onclick="openModal('cellhydra')">
                         <span class="product-tag">Serum</span>
                         <img src="assets/cellhydra/hydra1.jpg" class="main-img" alt="CellHydra+">
@@ -122,7 +122,7 @@
                     <button class="btn-add-grid" onclick="fastAdd('cellhydra')">Dodaj u korpu</button>
                 </div>
 
-                <div class="product-card" data-cat="marmelada">
+                <div class="product-card" data-cat="marmelada" data-id="marmelada">
                     <div class="img-wrap" onclick="openModal('marmelada')">
                         <span class="product-tag">Marmelada</span>
                         <img src="assets/marmelada/bronze1.jpg" class="main-img" alt="Marmelada">
@@ -134,7 +134,7 @@
             </div>
         </section>
 
-        <section class="about-section">
+        <section class="about-section" id="onama">
             <span class="about-subtitle">Nauka & Ritual</span>
             <h2 class="about-title">Nega kože je ritual svetlosti</h2>
             <p class="about-desc">Hyalena je premijum kozmetički brend koji spaja nauku i eleganciju. Svaki naš proizvod je pažljivo formulisan sa najčistijim aktivnim sastojcima — hijaluronskom kiselinom, peptidima i botaničkim ekstraktima — kako bi vaša koža dobila dubinsku negu i blistav sjaj koji zaslužuje.</p>
@@ -188,11 +188,11 @@
                     <a onclick="mobFilter('marmelada')">Marmelada</a>
                 </div>
             </div>
-            <a href="#proizvodi" onclick="toggleMobileMenu()">Best Seller</a>
-            <a href="#proizvodi" onclick="toggleMobileMenu()">Akcija</a>
+            <a onclick="showSpecial('bestseller')">Best Seller</a>
+            <a onclick="showSpecial('akcija')">Akcija</a>
             <a onclick="toggleMobileMenu(); openAuthModal();">Profil</a>
             <a onclick="toggleMobileMenu(); openCart();">Korpa</a>
-            <a onclick="toggleMobileMenu(); window.scrollTo(0, document.body.scrollHeight);">O nama</a>
+            <a href="#onama" onclick="toggleMobileMenu();">O nama</a>
         </div>
     </div>
 
@@ -382,7 +382,15 @@
         function closeCart() { document.getElementById('cart-overlay').classList.remove('active'); document.getElementById('cart-drawer').classList.remove('active'); }
         function goToCheckout() { if(cart.length === 0) return; closeCart(); document.getElementById('main-view').style.display = 'none'; document.getElementById('checkout-view').style.display = 'block'; window.scrollTo(0, 0); }
         function showMainView() { document.getElementById('checkout-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
-        function filterData(kat, btn) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.product-card').forEach(card => { if(kat === 'sve' || card.getAttribute('data-cat') === kat) card.style.display = 'block'; else card.style.display = 'none'; }); }
+        
+        function filterData(kat, btn) { 
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
+            btn.classList.add('active'); 
+            document.querySelectorAll('.product-card').forEach(card => { 
+                if(kat === 'sve' || card.getAttribute('data-cat') === kat) card.style.display = 'block'; 
+                else card.style.display = 'none'; 
+            }); 
+        }
 
         let isRegisterMode = false;
         let currentUser = null;
@@ -418,7 +426,7 @@
             } catch (err) { customAlert("Greška pri povezivanju."); }
         }
 
-        // --- STVARNO NARUČIVANJE PREKO EMAILJS (DUPLI MEJL) ---
+        // --- STVARNO NARUČIVANJE PREKO EMAILJS ---
         async function finishOrder() {
             let ime = document.getElementById('c-name').value;
             let email = document.getElementById('c-email').value;
@@ -471,11 +479,13 @@
                 customAlert("Došlo je do greške. Proverite internet konekciju.");
             }
         }
+        
         document.addEventListener("DOMContentLoaded", () => {
             if (!localStorage.getItem('hyalena_cookie_consent_v2')) { 
                 setTimeout(() => { document.getElementById('cookie-banner').classList.add('show'); }, 1500); 
             }
         });
+        
         function acceptCookies(type) { 
             localStorage.setItem('hyalena_cookie_consent_v2', type); 
             document.getElementById('cookie-banner').classList.remove('show'); 
@@ -504,6 +514,39 @@
             if(btn) filterData(kat, btn); 
             window.location.href = "#proizvodi"; 
         }
+
+        // PORSCHE FUNKCIJA ZA AKCIJU I BEST SELLER
+        function showSpecial(type) {
+            toggleMobileMenu(); // Zatvara meni
+            
+            // Gasi "aktivno" stanje sa svih dugmića za filter
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            
+            // Prolazi kroz sve proizvode i odlučuje koga prikazuje
+            document.querySelectorAll('.product-card').forEach(card => {
+                let id = card.getAttribute('data-id');
+                
+                if (type === 'akcija') {
+                    // Za akciju prikazujemo isključivo marmeladu
+                    if (id === 'marmelada') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                } 
+                else if (type === 'bestseller') {
+                    // Za best seller prikazujemo Gold i Noćnu
+                    if (id === 'gold' || id === 'nocna') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Spušta klijenta glatko pravo na proizvode
+            window.location.href = "#proizvodi";
+        }
     </script>
-</body>
+</body> 
 </html>
