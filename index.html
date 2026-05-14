@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
     <title>HYALENA | Cosmetic Line</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
@@ -20,6 +21,9 @@
                 <div class="nav-links">
                     <a onclick="resetToHome()">Početna</a>
                     <a onclick="filterIsolate('sve')">Proizvodi</a>
+                    <a onclick="filterIsolate('bestseller')">Best Seller</a>
+                    <a onclick="filterIsolate('akcija')">Akcija</a>
+                    <a onclick="showAbout()">O nama</a>
                 </div>
             </div>
             
@@ -454,7 +458,6 @@
             document.getElementById('cookie-banner').classList.remove('show'); 
         }
 
-        // BOČNI MENI
         function toggleMobileMenu() {
             document.getElementById('mobile-menu-overlay').classList.toggle('active');
             document.getElementById('mobile-menu-drawer').classList.toggle('active');
@@ -466,20 +469,13 @@
             arrow.innerText = arrow.innerText === '▼' ? '▲' : '▼';
         }
 
-        // ==========================================
-        // NOVA LOGIKA ZA POTPUNU IZOLACIJU PROIZVODA
-        // ==========================================
-        
         function resetToHome() {
-            // Vraća kompletan sajt na početno stanje
             document.querySelector('.hero-slider-container').style.display = 'flex';
             document.querySelector('.about-section').style.display = 'block';
             document.querySelector('.site-footer').style.display = 'block';
             
-            // Prikazuje apsolutno sve proizvode
             document.querySelectorAll('.product-card').forEach(card => card.style.display = 'block');
             
-            // Skrol i gašenje menija ako je otvoren
             window.scrollTo(0,0);
             let menuDrawer = document.getElementById('mobile-menu-drawer');
             if(menuDrawer && menuDrawer.classList.contains('active')) toggleMobileMenu();
@@ -489,15 +485,12 @@
             let menuDrawer = document.getElementById('mobile-menu-drawer');
             if(menuDrawer && menuDrawer.classList.contains('active')) toggleMobileMenu();
             
-            // SAKRIVA SVE OSIM PROIZVODA (Nema slajdera, footera, teksta)
             document.querySelector('.hero-slider-container').style.display = 'none';
             document.querySelector('.about-section').style.display = 'none';
             document.querySelector('.site-footer').style.display = 'none';
             
-            // Osiguravamo da je sam kontejner proizvoda uvek upaljen
             document.querySelector('.shop-container').style.display = 'block';
             
-            // Filtrira tačno ono što si tražio
             document.querySelectorAll('.product-card').forEach(card => {
                 let cat = card.getAttribute('data-cat');
                 let id = card.getAttribute('data-id');
@@ -513,12 +506,11 @@
                 }
             });
             
-            // Puca glatko na vrh gde je sada samo Header i goli proizvodi ispod njega
             window.scrollTo(0,0);
         }
 
         function showAbout() {
-            resetToHome(); // Prvo upali sve
+            resetToHome(); 
             setTimeout(() => { document.getElementById('onama').scrollIntoView({behavior: 'smooth'}); }, 100);
         }
 
