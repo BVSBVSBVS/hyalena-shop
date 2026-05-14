@@ -12,36 +12,36 @@
 </head>
 <body>
 
-    <div id="main-view">
-        <header>
-            <div class="header-left">
-                <button class="hamburger-btn" onclick="toggleMobileMenu()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                </button>
-                <div class="nav-links">
-                    <a onclick="resetToHome()">Početna</a>
-                    <a onclick="filterIsolate('sve')">Proizvodi</a>
-                    <a onclick="filterIsolate('bestseller')">Best Seller</a>
-                    <a onclick="filterIsolate('akcija')">Akcija</a>
-                    <a onclick="showAbout()">O nama</a>
-                </div>
+    <header>
+        <div class="header-left">
+            <button class="hamburger-btn" onclick="toggleMobileMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="nav-links">
+                <a onclick="resetToHome()">Početna</a>
+                <a onclick="filterIsolate('sve')">Proizvodi</a>
+                <a onclick="filterIsolate('bestseller')">Best Seller</a>
+                <a onclick="filterIsolate('akcija')">Akcija</a>
+                <a onclick="showAbout()">O nama</a>
             </div>
-            
-            <div class="logo-wrapper">
-                <a onclick="resetToHome()" class="logo" style="cursor: pointer;">HYALENA</a>
-            </div>
-            
-            <div class="cart-wrapper">
-                <button class="cart-btn desktop-auth" onclick="openAuthModal()" title="Moj nalog">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </button>
-                <button class="cart-btn" onclick="openCart()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                    <span class="cart-badge" id="cart-count">0</span>
-                </button>
-            </div>
-        </header>
+        </div>
+        
+        <div class="logo-wrapper">
+            <a onclick="resetToHome()" class="logo" style="cursor: pointer;">HYALENA</a>
+        </div>
+        
+        <div class="cart-wrapper">
+            <button class="cart-btn desktop-auth" onclick="openAuthModal()" title="Moj nalog">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </button>
+            <button class="cart-btn" onclick="openCart()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <span class="cart-badge" id="cart-count">0</span>
+            </button>
+        </div>
+    </header>
 
+    <div id="main-view">
         <section class="hero-slider-container">
             <div class="slide active">
                 <div class="hero-text">
@@ -193,6 +193,22 @@
         </div>
     </div>
 
+    <div id="checkout-view">
+        <div style="max-width: 1200px; margin: auto; margin-bottom: 20px;"><a onclick="showMainView()" style="cursor: pointer; color: var(--text-muted); text-decoration: underline; font-size: 13px;">← Nazad na kupovinu</a></div>
+        <div class="checkout-container">
+            <div class="checkout-form">
+                <h1 style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 30px;">Plaćanje</h1>
+                <div class="form-group" style="margin-bottom: 15px;"><label>Ime i Prezime *</label><input type="text" id="c-name" class="form-input" placeholder="npr. Marina Marinković"></div>
+                <div class="form-row"><div class="form-group"><label>Email adresa *</label><input type="email" id="c-email" class="form-input" placeholder="npr. marina@primer.com"></div><div class="form-group"><label>Telefon *</label><input type="tel" id="c-phone" class="form-input" placeholder="npr. 064 123 4567"></div></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label>Adresa i broj *</label><input type="text" id="c-address" class="form-input" placeholder="npr. Knez Mihailova 10"></div>
+                <div class="form-row"><div class="form-group"><label>Grad *</label><input type="text" id="c-city" class="form-input" placeholder="npr. Beograd"></div><div class="form-group"><label>Poštanski broj *</label><input type="text" id="c-zip" class="form-input" placeholder="npr. 11000"></div></div>
+                <div style="background: #f4f4f4; padding: 20px; border-left: 3px solid var(--text-dark); margin: 30px 0; font-size: 13px;"><strong>NAČIN PLAĆANJA:</strong> Pouzećem (Gotovinom prilikom preuzimanja paketa).</div>
+                <button class="btn-full" onclick="finishOrder()">Potvrdi porudžbinu</button>
+            </div>
+            <div class="checkout-summary"><h3 style="font-family: var(--font-serif); margin-bottom: 20px;">Pregled porudžbine</h3><div id="checkout-items-list"></div><div class="summary-row" style="margin-top: 20px;"><span>Dostava</span><strong>Besplatna</strong></div><div class="summary-row summary-total"><span>Ukupno</span><span id="checkout-total-price">0 RSD</span></div></div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="auth-overlay" onclick="closeAuthModal()"></div>
     <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 40px; display: flex; flex-direction: column; align-items: center;">
         <button class="modal-close" onclick="closeAuthModal()">&times;</button>
@@ -217,22 +233,6 @@
             <div class="m-price" id="m-price">0 RSD</div>
             <div class="m-desc" id="m-desc">Opširan tekst...</div>
             <button class="btn-full" id="m-add-btn" style="margin-top: auto;">Dodaj u korpu</button>
-        </div>
-    </div>
-
-    <div id="checkout-view">
-        <div style="max-width: 1200px; margin: auto; margin-bottom: 20px;"><a onclick="showMainView()" style="cursor: pointer; color: var(--text-muted); text-decoration: underline; font-size: 13px;">← Nazad na kupovinu</a></div>
-        <div class="checkout-container">
-            <div class="checkout-form">
-                <h1 style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 30px;">Plaćanje</h1>
-                <div class="form-group" style="margin-bottom: 15px;"><label>Ime i Prezime *</label><input type="text" id="c-name" class="form-input" placeholder="npr. Marina Marinković"></div>
-                <div class="form-row"><div class="form-group"><label>Email adresa *</label><input type="email" id="c-email" class="form-input" placeholder="npr. marina@primer.com"></div><div class="form-group"><label>Telefon *</label><input type="tel" id="c-phone" class="form-input" placeholder="npr. 064 123 4567"></div></div>
-                <div class="form-group" style="margin-bottom: 15px;"><label>Adresa i broj *</label><input type="text" id="c-address" class="form-input" placeholder="npr. Knez Mihailova 10"></div>
-                <div class="form-row"><div class="form-group"><label>Grad *</label><input type="text" id="c-city" class="form-input" placeholder="npr. Beograd"></div><div class="form-group"><label>Poštanski broj *</label><input type="text" id="c-zip" class="form-input" placeholder="npr. 11000"></div></div>
-                <div style="background: #f4f4f4; padding: 20px; border-left: 3px solid var(--text-dark); margin: 30px 0; font-size: 13px;"><strong>NAČIN PLAĆANJA:</strong> Pouzećem (Gotovinom prilikom preuzimanja paketa).</div>
-                <button class="btn-full" onclick="finishOrder()">Potvrdi porudžbinu</button>
-            </div>
-            <div class="checkout-summary"><h3 style="font-family: var(--font-serif); margin-bottom: 20px;">Pregled porudžbine</h3><div id="checkout-items-list"></div><div class="summary-row" style="margin-top: 20px;"><span>Dostava</span><strong>Besplatna</strong></div><div class="summary-row summary-total"><span>Ukupno</span><span id="checkout-total-price">0 RSD</span></div></div>
         </div>
     </div>
 
@@ -376,8 +376,20 @@
 
         function openCart() { document.getElementById('cart-overlay').classList.add('active'); document.getElementById('cart-drawer').classList.add('active'); }
         function closeCart() { document.getElementById('cart-overlay').classList.remove('active'); document.getElementById('cart-drawer').classList.remove('active'); }
-        function goToCheckout() { if(cart.length === 0) return; closeCart(); document.getElementById('main-view').style.display = 'none'; document.getElementById('checkout-view').style.display = 'block'; window.scrollTo(0, 0); }
-        function showMainView() { document.getElementById('checkout-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
+        
+        function goToCheckout() { 
+            if(cart.length === 0) return; 
+            closeCart(); 
+            document.getElementById('main-view').style.display = 'none'; 
+            document.getElementById('checkout-view').style.display = 'block'; 
+            window.scrollTo(0, 0); 
+        }
+        
+        function showMainView() { 
+            document.getElementById('checkout-view').style.display = 'none'; 
+            document.getElementById('main-view').style.display = 'block'; 
+            window.scrollTo(0, 0);
+        }
         
         let isRegisterMode = false;
         let currentUser = null;
@@ -470,6 +482,10 @@
         }
 
         function resetToHome() {
+            // FIX: Vraća nas iz checkout-a nazad na glavnu stranu
+            document.getElementById('checkout-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+
             document.querySelector('.hero-slider-container').style.display = 'flex';
             document.querySelector('.about-section').style.display = 'block';
             document.querySelector('.site-footer').style.display = 'block';
@@ -482,6 +498,10 @@
         }
 
         function filterIsolate(type) {
+            // FIX: Vraća nas iz checkout-a ako smo tu kliknuli meni
+            document.getElementById('checkout-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+
             let menuDrawer = document.getElementById('mobile-menu-drawer');
             if(menuDrawer && menuDrawer.classList.contains('active')) toggleMobileMenu();
             
