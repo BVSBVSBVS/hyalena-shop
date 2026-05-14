@@ -193,22 +193,6 @@
         </div>
     </div>
 
-    <div id="checkout-view">
-        <div style="max-width: 1200px; margin: auto; margin-bottom: 20px;"><a onclick="showMainView()" style="cursor: pointer; color: var(--text-muted); text-decoration: underline; font-size: 13px;">← Nazad na kupovinu</a></div>
-        <div class="checkout-container">
-            <div class="checkout-form">
-                <h1 style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 30px;">Plaćanje</h1>
-                <div class="form-group" style="margin-bottom: 15px;"><label>Ime i Prezime *</label><input type="text" id="c-name" class="form-input" placeholder="npr. Marina Marinković"></div>
-                <div class="form-row"><div class="form-group"><label>Email adresa *</label><input type="email" id="c-email" class="form-input" placeholder="npr. marina@primer.com"></div><div class="form-group"><label>Telefon *</label><input type="tel" id="c-phone" class="form-input" placeholder="npr. 064 123 4567"></div></div>
-                <div class="form-group" style="margin-bottom: 15px;"><label>Adresa i broj *</label><input type="text" id="c-address" class="form-input" placeholder="npr. Knez Mihailova 10"></div>
-                <div class="form-row"><div class="form-group"><label>Grad *</label><input type="text" id="c-city" class="form-input" placeholder="npr. Beograd"></div><div class="form-group"><label>Poštanski broj *</label><input type="text" id="c-zip" class="form-input" placeholder="npr. 11000"></div></div>
-                <div style="background: #f4f4f4; padding: 20px; border-left: 3px solid var(--text-dark); margin: 30px 0; font-size: 13px;"><strong>NAČIN PLAĆANJA:</strong> Pouzećem (Gotovinom prilikom preuzimanja paketa).</div>
-                <button class="btn-full" onclick="finishOrder()">Potvrdi porudžbinu</button>
-            </div>
-            <div class="checkout-summary"><h3 style="font-family: var(--font-serif); margin-bottom: 20px;">Pregled porudžbine</h3><div id="checkout-items-list"></div><div class="summary-row" style="margin-top: 20px;"><span>Dostava</span><strong>Besplatna</strong></div><div class="summary-row summary-total"><span>Ukupno</span><span id="checkout-total-price">0 RSD</span></div></div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="auth-overlay" onclick="closeAuthModal()"></div>
     <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 40px; display: flex; flex-direction: column; align-items: center;">
         <button class="modal-close" onclick="closeAuthModal()">&times;</button>
@@ -233,6 +217,22 @@
             <div class="m-price" id="m-price">0 RSD</div>
             <div class="m-desc" id="m-desc">Opširan tekst...</div>
             <button class="btn-full" id="m-add-btn" style="margin-top: auto;">Dodaj u korpu</button>
+        </div>
+    </div>
+
+    <div id="checkout-view">
+        <div style="max-width: 1200px; margin: auto; margin-bottom: 20px;"><a onclick="resetToHome()" style="cursor: pointer; color: var(--text-muted); text-decoration: underline; font-size: 13px;">← Nazad na kupovinu</a></div>
+        <div class="checkout-container">
+            <div class="checkout-form">
+                <h1 style="font-family: var(--font-serif); font-size: 2.5rem; margin-bottom: 30px;">Plaćanje</h1>
+                <div class="form-group" style="margin-bottom: 15px;"><label>Ime i Prezime *</label><input type="text" id="c-name" class="form-input" placeholder="npr. Marina Marinković"></div>
+                <div class="form-row"><div class="form-group"><label>Email adresa *</label><input type="email" id="c-email" class="form-input" placeholder="npr. marina@primer.com"></div><div class="form-group"><label>Telefon *</label><input type="tel" id="c-phone" class="form-input" placeholder="npr. 064 123 4567"></div></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label>Adresa i broj *</label><input type="text" id="c-address" class="form-input" placeholder="npr. Knez Mihailova 10"></div>
+                <div class="form-row"><div class="form-group"><label>Grad *</label><input type="text" id="c-city" class="form-input" placeholder="npr. Beograd"></div><div class="form-group"><label>Poštanski broj *</label><input type="text" id="c-zip" class="form-input" placeholder="npr. 11000"></div></div>
+                <div style="background: #f4f4f4; padding: 20px; border-left: 3px solid var(--text-dark); margin: 30px 0; font-size: 13px;"><strong>NAČIN PLAĆANJA:</strong> Pouzećem (Gotovinom prilikom preuzimanja paketa).</div>
+                <button class="btn-full" onclick="finishOrder()">Potvrdi porudžbinu</button>
+            </div>
+            <div class="checkout-summary"><h3 style="font-family: var(--font-serif); margin-bottom: 20px;">Pregled porudžbine</h3><div id="checkout-items-list"></div><div class="summary-row" style="margin-top: 20px;"><span>Dostava</span><strong>Besplatna</strong></div><div class="summary-row summary-total"><span>Ukupno</span><span id="checkout-total-price">0 RSD</span></div></div>
         </div>
     </div>
 
@@ -400,6 +400,7 @@
         });
 
         function openAuthModal() {
+            closeCart(); // FIX: Gasi korpu ako je slučajno otvorena
             if(currentUser) {
                 customConfirm(`Prijavljeni ste na nalog: ${currentUser}. Želite li da se odjavite?`, () => {
                     currentUser = null; localStorage.removeItem('hyalena_user'); document.getElementById('c-email').value = ''; customAlert("Uspešno ste se odjavili.");
@@ -482,7 +483,8 @@
         }
 
         function resetToHome() {
-            // FIX: Vraća nas iz checkout-a nazad na glavnu stranu
+            closeCart(); // FIX: Uvek prvo gasi korpu ako je ostala otvorena
+            
             document.getElementById('checkout-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
 
@@ -498,7 +500,8 @@
         }
 
         function filterIsolate(type) {
-            // FIX: Vraća nas iz checkout-a ako smo tu kliknuli meni
+            closeCart(); // FIX: Uvek prvo gasi korpu ako je ostala otvorena
+
             document.getElementById('checkout-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
 
