@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="format-detection" content="telephone=no">
     <title>HYALENA | Cosmetic Line</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -194,9 +194,10 @@
     </div>
 
     <div class="modal-overlay" id="auth-overlay" onclick="closeAuthModal()"></div>
-    <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 50px 40px 40px 40px; display: flex; flex-direction: column; align-items: center;">
+    <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 40px; display: flex; flex-direction: column; align-items: center;">
         <button class="modal-close" onclick="closeAuthModal()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <svg class="icon-close-desktop" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <svg class="icon-back-mobile" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         </button>
         <h2 style="font-family: var(--font-serif); margin-bottom: 20px; font-size: 2rem;" id="auth-title">Prijava</h2>
         <div style="width: 100%;">
@@ -210,7 +211,8 @@
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
     <div class="product-modal" id="product-modal">
         <button class="modal-close" onclick="closeModal()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <svg class="icon-close-desktop" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <svg class="icon-back-mobile" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         </button>
         <div class="modal-gallery">
             <img id="m-main-img" class="modal-main-pic" src="">
@@ -300,7 +302,6 @@
             }
         };
 
-        // PRELOAD SLIKA - Učitava sve slike u memoriju čim se sajt otvori da ne bi bilo lagovanja
         window.addEventListener('load', () => {
             for (let key in productsDB) {
                 productsDB[key].images.forEach(src => {
@@ -553,4 +554,4 @@
 
     </script>
 </body> 
-</html>s
+</html>
