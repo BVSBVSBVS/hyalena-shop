@@ -183,6 +183,7 @@ header {
 .mobile-dropdown-content a { font-size: 0.95rem; color: var(--text-muted); font-weight: 400; }
 .mobile-dropdown-content a:hover { color: var(--accent-gold); }
 
+/* --- RESPONSIVE DEO --- */
 @media (max-width: 768px) {
     html, body { max-width: 100vw; overflow-x: hidden; }
 
@@ -201,14 +202,12 @@ header {
     .desktop-auth { display: none; } 
     .logo { font-size: 24px; } 
 
-    /* REŠENJE: Vraćen stari rock-solid raspored */
     .slide { flex-direction: column; text-align: center; padding: 40px 5%; justify-content: center; gap: 20px;}
     .hero-img { width: 220px; height: 220px; padding: 0; margin: 0 auto; }
     .hero-title { font-size: 2.8rem; line-height: 1; }
     .hero-price { font-size: 1.5rem; margin-bottom: 20px; }
     .hero-text { text-align: center; margin: 0 auto; }
 
-    /* STRELICE: Crne su, i spuštene niz slajder da gađaju sliku */
     .slider-controls { 
         display: flex !important;
         top: 75%; 
@@ -220,14 +219,20 @@ header {
         padding: 0 5%; 
         pointer-events: none; 
     }
-    .control-arrow { 
-        pointer-events: auto; 
-        font-size: 35px; 
-        color: #111111 !important; 
-        opacity: 1 !important; 
-    }
+    .control-arrow { pointer-events: auto; font-size: 35px; color: #111111 !important; opacity: 1 !important; }
     .dots { display: none !important; }
 
+    /* NOVI GRID ZA PROIZVODE: 2 U REDU NA MOBILNOM */
+    .shop-container { padding: 40px 5%; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .img-wrap { height: 160px; margin-bottom: 10px; }
+    .prod-info { padding: 0 5px; margin-bottom: 10px; }
+    .prod-title { font-size: 1.1rem; margin-bottom: 3px; }
+    .prod-price { font-size: 0.85rem; }
+    .product-tag { font-size: 8px; padding: 3px 6px; top: 10px; left: 10px; }
+    .btn-add-grid { width: 100%; margin: 0; padding: 8px 5px; font-size: 0.7rem; letter-spacing: 0px; }
+
+    /* OSTATAK */
     .checkout-container { flex-direction: column; gap: 30px; }
     .form-row { flex-direction: column; gap: 0; } 
     .form-group { width: 100%; margin-bottom: 15px; }
