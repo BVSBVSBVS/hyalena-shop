@@ -107,9 +107,27 @@ header {
 
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+/* FIX: Pozicija strelice za zatvaranje modala (pomerena u gornji LEVI ugao za native app osećaj) */
 .product-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 90%; max-width: 1000px; height: 80vh; background: var(--bg-light); z-index: 2001; display: flex; flex-wrap: wrap; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
 .product-modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-.modal-close { position: absolute; top: 15px; right: 20px; font-size: 30px; background: none; border: none; cursor: pointer; z-index: 10; color: var(--text-dark); }
+.modal-close { 
+    position: absolute; 
+    top: 15px; 
+    left: 15px; /* Premešteno levo */
+    background: #f4f4f4; 
+    border-radius: 50%; 
+    width: 40px; 
+    height: 40px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: none; 
+    cursor: pointer; 
+    z-index: 10; 
+    color: var(--text-dark); 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+}
 .modal-gallery { flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .modal-main-pic { width: 100%; height: 70%; object-fit: contain; margin-bottom: 20px; }
 .thumb-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; width: 100%; justify-content: center;}
@@ -231,34 +249,34 @@ header {
     .product-tag { font-size: 8px; padding: 3px 6px; top: 10px; left: 10px; }
     .btn-add-grid { width: 100%; margin: 0; padding: 8px 5px; font-size: 0.7rem; letter-spacing: 0px; }
 
-    /* --- FIX: ZAKUCANO DUGME "DODAJ U KORPU" (NATIVE APP FEEL) --- */
+    /* MODAL ZA TELEFON - Native App Feel */
     .product-modal { 
         width: 100%; 
         height: 100dvh; 
         padding: 0; 
         flex-direction: column; 
         flex-wrap: nowrap;
-        overflow: hidden; /* Celo telo se ne skrola */
+        overflow: hidden; 
         border-radius: 0; 
     }
+    /* Strelica nazad sigurno pozicionirana gore levo */
     .modal-close {
         top: 15px;
-        right: 15px;
-        background: #f4f4f4; /* Beli krug da iskoči od pozadine */
+        left: 15px;
+        background: #f4f4f4;
         border-radius: 50%;
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
         z-index: 10;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     .modal-gallery { 
         min-width: 100%; 
         padding: 50px 0 15px; 
-        flex-shrink: 0; /* Osigurava da se slika ne smanjuje */
+        flex-shrink: 0; 
     }
     .modal-main-pic { height: 180px; margin-bottom: 15px; }
     .thumb-row { padding-bottom: 5px; }
@@ -267,8 +285,8 @@ header {
     .modal-details { 
         min-width: 100%; 
         padding: 20px 5% 0 5%; 
-        flex: 1; /* Uzima sav preostali prostor u visinu */
-        overflow-y: auto; /* Zadržava skrol SAMO za tekst ispod slike */
+        flex: 1; 
+        overflow-y: auto; 
         display: flex;
         flex-direction: column;
     }
@@ -277,15 +295,14 @@ header {
     .m-desc { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6; }
     
     #m-add-btn { 
-        margin-top: auto; /* Magija: gura dugme uvek na dno ako ima malo teksta */
-        position: sticky; /* Zadržava ga vidljivim dok skrolaš */
-        bottom: 20px; /* Odvaja ga od same ivice ekrana telefona */
+        margin-top: auto; 
+        position: sticky; 
+        bottom: 20px; 
         width: 100%; 
         padding: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3); /* Daje mu onaj lebdeći Wolt/Apple izgled */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
     }
 
-    /* OSTATAK */
     .checkout-container { flex-direction: column; gap: 30px; }
     .form-row { flex-direction: column; gap: 0; } 
     .form-group { width: 100%; margin-bottom: 15px; }

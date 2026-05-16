@@ -194,8 +194,10 @@
     </div>
 
     <div class="modal-overlay" id="auth-overlay" onclick="closeAuthModal()"></div>
-    <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 40px; display: flex; flex-direction: column; align-items: center;">
-        <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+    <div class="product-modal" id="auth-modal" style="max-width: 400px; height: auto; padding: 50px 40px 40px 40px; display: flex; flex-direction: column; align-items: center;">
+        <button class="modal-close" onclick="closeAuthModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </button>
         <h2 style="font-family: var(--font-serif); margin-bottom: 20px; font-size: 2rem;" id="auth-title">Prijava</h2>
         <div style="width: 100%;">
             <div class="form-group"><label>Email adresa</label><input type="email" id="auth-email" class="form-input" placeholder="npr. marina@primer.com"></div>
@@ -207,7 +209,9 @@
 
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
     <div class="product-modal" id="product-modal">
-        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <button class="modal-close" onclick="closeModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </button>
         <div class="modal-gallery">
             <img id="m-main-img" class="modal-main-pic" src="">
             <div class="thumb-row" id="m-thumbnails"></div>
@@ -549,4 +553,4 @@
 
     </script>
 </body> 
-</html>
+</html>s
