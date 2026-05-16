@@ -215,7 +215,10 @@
             <svg class="icon-back-mobile" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         </button>
         <div class="modal-gallery">
+            <button class="modal-arrow left" onclick="prevModalPic()">&#10094;</button>
             <img id="m-main-img" class="modal-main-pic" src="">
+            <button class="modal-arrow right" onclick="nextModalPic()">&#10095;</button>
+            
             <div class="thumb-row" id="m-thumbnails"></div>
         </div>
         <div class="modal-details">
@@ -362,13 +365,54 @@
             }
         }
 
+        // ==========================================
+        // NOVA LOGIKA ZA LISTANJE SLIKA U MODALU
+        // ==========================================
+        let currentModalImages = [];
+        let currentModalIndex = 0;
+
         function openModal(id) {
             const item = productsDB[id];
-            document.getElementById('m-title').innerText = item.name; document.getElementById('m-price').innerText = item.price.toLocaleString() + ' RSD'; document.getElementById('m-desc').innerHTML = item.desc; document.getElementById('m-main-img').src = item.images[0];
-            let thumbsHTML = ''; item.images.forEach((imgSrc, index) => { const activeClass = index === 0 ? 'active' : ''; thumbsHTML += `<img src="${imgSrc}" class="thumb-img ${activeClass}" onclick="changeModalPic('${imgSrc}', this)">`; });
-            document.getElementById('m-thumbnails').innerHTML = thumbsHTML; document.getElementById('m-add-btn').onclick = () => { fastAdd(id); closeModal(); }; document.getElementById('modal-overlay').classList.add('active'); document.getElementById('product-modal').classList.add('active');
+            currentModalImages = item.images;
+            currentModalIndex = 0;
+            
+            document.getElementById('m-title').innerText = item.name; 
+            document.getElementById('m-price').innerText = item.price.toLocaleString() + ' RSD'; 
+            document.getElementById('m-desc').innerHTML = item.desc; 
+            
+            updateModalPic();
+            
+            document.getElementById('m-add-btn').onclick = () => { fastAdd(id); closeModal(); }; 
+            document.getElementById('modal-overlay').classList.add('active'); 
+            document.getElementById('product-modal').classList.add('active');
         }
-        function changeModalPic(src, thumbElement) { document.getElementById('m-main-img').src = src; document.querySelectorAll('.thumb-img').forEach(el => el.classList.remove('active')); thumbElement.classList.add('active'); }
+
+        function updateModalPic() {
+            document.getElementById('m-main-img').src = currentModalImages[currentModalIndex];
+            
+            let thumbsHTML = ''; 
+            currentModalImages.forEach((imgSrc, index) => { 
+                const activeClass = index === currentModalIndex ? 'active' : ''; 
+                thumbsHTML += `<img src="${imgSrc}" class="thumb-img ${activeClass}" onclick="changeModalPic(${index})">`; 
+            });
+            document.getElementById('m-thumbnails').innerHTML = thumbsHTML;
+        }
+
+        function changeModalPic(index) {
+            currentModalIndex = index;
+            updateModalPic();
+        }
+
+        function prevModalPic() {
+            currentModalIndex = (currentModalIndex - 1 + currentModalImages.length) % currentModalImages.length;
+            updateModalPic();
+        }
+
+        function nextModalPic() {
+            currentModalIndex = (currentModalIndex + 1) % currentModalImages.length;
+            updateModalPic();
+        }
+
         function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); document.getElementById('product-modal').classList.remove('active'); }
 
         function fastAdd(id) {
