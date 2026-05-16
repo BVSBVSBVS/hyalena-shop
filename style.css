@@ -4,7 +4,6 @@
     --font-serif: 'Cormorant Garamond', serif; --font-sans: 'Inter', sans-serif;
 }
 
-/* FIX 3: Zabrana double-tap zooma kroz CSS */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 button, a, input, select, textarea { touch-action: manipulation; }
 
@@ -128,7 +127,6 @@ header {
     color: var(--text-dark); 
 }
 
-/* FIX 1: Galerija na sredini za komp (justify-content: center) */
 .modal-gallery { position: relative; flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .modal-main-pic { width: 100%; height: 60%; max-height: 350px; object-fit: contain; margin-bottom: 20px; }
 
@@ -260,6 +258,7 @@ header {
     .icon-back-mobile { display: block; }
     .icon-close-desktop { display: none; }
 
+    /* FIX 2: PRAVA APLIKACIJSKA LOGIKA (JEDAN SKROL) BEZ BAGOVANJA DUGMETA */
     .product-modal, .product-modal.active { 
         top: 0 !important; 
         left: 0 !important; 
@@ -267,13 +266,14 @@ header {
         width: 100%; 
         height: 100dvh; 
         padding: 0; 
-        flex-direction: column; 
-        overflow-y: auto; /* CEO EKRAN SE SKROLA DA BI DUGME BILO NA KRAJU TEKSTA */
+        display: block; /* Poništavamo FLEX, sada je sve normalan tok */
+        overflow-y: auto; /* CEO MODAL IMA JEDAN SKROL */
         border-radius: 0; 
         background: var(--bg-light);
     }
     
     .modal-close {
+        position: fixed; /* STRELICA UVEK LEBDI GORE LEVO DOK SKROLAŠ */
         top: 15px;
         left: 15px;
         right: auto; 
@@ -284,7 +284,7 @@ header {
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 10;
+        z-index: 1000;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
@@ -292,7 +292,9 @@ header {
         width: 100%; 
         padding: 60px 0 10px; 
         background: var(--bg-light);
-        flex-shrink: 0; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     .modal-main-pic { 
         height: 280px; 
@@ -300,16 +302,16 @@ header {
         width: 100%; 
         margin-bottom: 10px; 
     }
-    .modal-arrow { top: 45%; font-size: 35px; }
+    .modal-arrow { top: 40%; font-size: 35px; }
 
     .thumb-row { gap: 12px; }
     .thumb-img { width: 55px; height: 55px; border-radius: 4px; }
     
     .modal-details { 
         width: 100%; 
-        /* FIX 2: SKLONJEN GIGANTSKI DONJI PADDING - TEKST VIŠE NE BEŽI GORE */
-        padding: 15px 5% 30px 5%; 
-        flex: 1; 
+        padding: 15px 5% 40px 5%; 
+        display: block; /* Nema više fleksa, nema sečenja teksta */
+        overflow-y: visible; /* Zabranjen dupli skrol! */
         position: relative;
         text-align: left;
     }
@@ -317,18 +319,14 @@ header {
     .m-price { font-size: 1.3rem; margin-bottom: 20px; color: var(--accent-gold); }
     .m-desc { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 20px; }
     
-    /* FIX 2: DUGME JE SADA FIKSIRANO U ODNOSU NA TEKST - ZNAČI TEKST SE NE SLADJUJE ISPOD */
+    /* DUGME NAKON TEKSTA, BEZ IZNENADJENJA */
     #m-add-btn { 
-        position: relative; 
-        bottom: auto; 
-        left: auto; 
+        display: block;
         width: 100%; 
         padding: 18px; 
         font-size: 1rem;
-        z-index: 100; 
         border-radius: 4px; 
-        margin-top: 20px; /* Malo mesta izmedju teksta i dugmeta */
-        box-shadow: none; /* Uklonjena iritantna senka */
+        margin-top: 20px; 
     }
 
     .checkout-container { flex-direction: column; gap: 30px; }
