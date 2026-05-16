@@ -296,6 +296,16 @@
             }
         };
 
+        // PRELOAD SLIKA - Učitava sve slike u memoriju čim se sajt otvori da ne bi bilo lagovanja
+        window.addEventListener('load', () => {
+            for (let key in productsDB) {
+                productsDB[key].images.forEach(src => {
+                    const img = new Image();
+                    img.src = src;
+                });
+            }
+        });
+
         function customAlert(message) {
             document.getElementById('custom-alert-text').innerText = message;
             document.getElementById('custom-alert-buttons').innerHTML = `<button class="btn-full" onclick="closeCustomAlert()">U redu</button>`;
@@ -400,7 +410,7 @@
         });
 
         function openAuthModal() {
-            closeCart(); // FIX: Gasi korpu ako je slučajno otvorena
+            closeCart();
             if(currentUser) {
                 customConfirm(`Prijavljeni ste na nalog: ${currentUser}. Želite li da se odjavite?`, () => {
                     currentUser = null; localStorage.removeItem('hyalena_user'); document.getElementById('c-email').value = ''; customAlert("Uspešno ste se odjavili.");
@@ -483,7 +493,7 @@
         }
 
         function resetToHome() {
-            closeCart(); // FIX: Uvek prvo gasi korpu ako je ostala otvorena
+            closeCart();
             
             document.getElementById('checkout-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
@@ -500,7 +510,7 @@
         }
 
         function filterIsolate(type) {
-            closeCart(); // FIX: Uvek prvo gasi korpu ako je ostala otvorena
+            closeCart();
 
             document.getElementById('checkout-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
