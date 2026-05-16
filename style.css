@@ -28,6 +28,7 @@ a[href^="tel"] {
     min-height: 80vh; 
 }
 
+/* HEADER JE 9999 */
 header { 
     display: grid; 
     grid-template-columns: 1fr auto 1fr; 
@@ -105,16 +106,16 @@ header {
 .btn-add-grid { width: calc(100% - 20px); margin: 0 10px; padding: 12px; background-color: var(--text-dark); color: white; border: none; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
 .btn-add-grid:hover { background-color: var(--accent-gold); }
 
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
+/* FIX: Z-INDEX MODALA PODIGNUT PREKO 10000 DA PREKLOPI HEADER */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
-/* FIX: Pozicija strelice za zatvaranje modala (pomerena u gornji LEVI ugao za native app osećaj) */
-.product-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 90%; max-width: 1000px; height: 80vh; background: var(--bg-light); z-index: 2001; display: flex; flex-wrap: wrap; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+.product-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 90%; max-width: 1000px; height: 80vh; background: var(--bg-light); z-index: 10001; display: flex; flex-wrap: wrap; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
 .product-modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
 .modal-close { 
     position: absolute; 
     top: 15px; 
-    left: 15px; /* Premešteno levo */
+    left: 15px; 
     background: #f4f4f4; 
     border-radius: 50%; 
     width: 40px; 
@@ -124,7 +125,7 @@ header {
     justify-content: center; 
     border: none; 
     cursor: pointer; 
-    z-index: 10; 
+    z-index: 20000; 
     color: var(--text-dark); 
     box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
 }
@@ -161,9 +162,9 @@ header {
 .footer-contact p { margin-bottom: 12px; font-size: 0.9rem; color: #aaaaaa; }
 .footer-bottom { text-align: center; padding-top: 30px; font-size: 0.75rem; color: #666666; }
 
-.cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; opacity: 0; pointer-events: none; transition: 0.3s; }
+.cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; opacity: 0; pointer-events: none; transition: 0.3s; }
 .cart-overlay.active { opacity: 1; pointer-events: auto; }
-.cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: var(--bg-light); z-index: 3001; display: flex; flex-direction: column; transition: 0.4s; }
+.cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: var(--bg-light); z-index: 10001; display: flex; flex-direction: column; transition: 0.4s; }
 .cart-drawer.active { right: 0; }
 .cart-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .cart-items { flex-grow: 1; padding: 25px; overflow-y: auto; }
@@ -189,9 +190,9 @@ header {
 .btn-cookie-solid { background: var(--accent-gold); border: 1px solid var(--accent-gold); color: var(--text-dark); padding: 10px 20px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; transition: 0.3s; }
 .btn-cookie-solid:hover { background: var(--bg-light); border-color: var(--bg-light); }
 
-.mobile-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(3px); }
+.mobile-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(3px); }
 .mobile-menu-overlay.active { opacity: 1; pointer-events: auto; }
-.mobile-menu-drawer { position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; height: 100%; background: var(--bg-light); z-index: 4001; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 5px 0 25px rgba(0,0,0,0.1); }
+.mobile-menu-drawer { position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; height: 100%; background: var(--bg-light); z-index: 10001; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: 5px 0 25px rgba(0,0,0,0.1); }
 .mobile-menu-drawer.active { left: 0; }
 .mobile-menu-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .mobile-menu-links { padding: 25px; display: flex; flex-direction: column; gap: 25px; overflow-y: auto; }
@@ -249,8 +250,11 @@ header {
     .product-tag { font-size: 8px; padding: 3px 6px; top: 10px; left: 10px; }
     .btn-add-grid { width: 100%; margin: 0; padding: 8px 5px; font-size: 0.7rem; letter-spacing: 0px; }
 
-    /* MODAL ZA TELEFON - Native App Feel */
-    .product-modal { 
+    /* FIX: OVERRIDE TRANSFORM DA MODAL POČNE U STROGOM VRHU EKRANA, PREKO SVEGA */
+    .product-modal, .product-modal.active { 
+        top: 0 !important; 
+        left: 0 !important; 
+        transform: none !important; 
         width: 100%; 
         height: 100dvh; 
         padding: 0; 
@@ -259,23 +263,10 @@ header {
         overflow: hidden; 
         border-radius: 0; 
     }
-    /* Strelica nazad sigurno pozicionirana gore levo */
-    .modal-close {
-        top: 15px;
-        left: 15px;
-        background: #f4f4f4;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+    
     .modal-gallery { 
         min-width: 100%; 
-        padding: 50px 0 15px; 
+        padding: 60px 0 15px; 
         flex-shrink: 0; 
     }
     .modal-main-pic { height: 180px; margin-bottom: 15px; }
@@ -289,18 +280,28 @@ header {
         overflow-y: auto; 
         display: flex;
         flex-direction: column;
+        position: relative;
     }
     .m-title { font-size: 1.6rem; margin-bottom: 5px; }
     .m-price { font-size: 1.2rem; margin-bottom: 15px; }
-    .m-desc { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6; }
     
+    /* FIX: DODATO PUNO MESTA NA DNU TEKSTA DA SE SKROLA DO KRAJA */
+    .m-desc { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6; padding-bottom: 40px; }
+    
+    /* FIX: DUGME RAŠIRENO DO IVICA, PREKO NJEGA BELA SENKA KOJA ELEGANTNO KRIJE TEKST */
     #m-add-btn { 
         margin-top: auto; 
         position: sticky; 
-        bottom: 20px; 
-        width: 100%; 
-        padding: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+        bottom: 0; 
+        width: 112%; 
+        margin-left: -6%; 
+        padding: 20px 15px;
+        border-radius: 0;
+        z-index: 100;
+        background-color: var(--text-dark);
+        color: white;
+        box-shadow: 0 -15px 30px rgba(255, 255, 255, 1);
+        border-top: 2px solid var(--bg-light);
     }
 
     .checkout-container { flex-direction: column; gap: 30px; }
