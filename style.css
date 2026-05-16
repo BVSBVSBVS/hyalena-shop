@@ -4,7 +4,9 @@
     --font-serif: 'Cormorant Garamond', serif; --font-sans: 'Inter', sans-serif;
 }
 
+/* FIX 3: Zabrana double-tap zooma kroz CSS */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+button, a, input, select, textarea { touch-action: manipulation; }
 
 body { 
     background-color: var(--bg-light); 
@@ -111,7 +113,6 @@ header {
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
 .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
-/* FIX: Podešena maksimalna visina glavne slike za desktop kako bi male sličice ispod uvek stale na ekran */
 .product-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 90%; max-width: 1000px; height: 80vh; background: var(--bg-light); z-index: 10001; display: flex; flex-wrap: wrap; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
 .product-modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
 
@@ -127,9 +128,9 @@ header {
     color: var(--text-dark); 
 }
 
-/* FIX: Strelice u modalu na kompu */
-.modal-gallery { position: relative; flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
-.modal-main-pic { width: 100%; height: 60%; max-height: 350px; object-fit: contain; margin-bottom: 15px; }
+/* FIX 1: Galerija na sredini za komp (justify-content: center) */
+.modal-gallery { position: relative; flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.modal-main-pic { width: 100%; height: 60%; max-height: 350px; object-fit: contain; margin-bottom: 20px; }
 
 .modal-arrow { position: absolute; top: 40%; transform: translateY(-50%); background: none; border: none; font-size: 30px; cursor: pointer; color: var(--text-dark); opacity: 0.7; z-index: 5; padding: 10px; }
 .modal-arrow:hover { opacity: 1; }
@@ -259,7 +260,6 @@ header {
     .icon-back-mobile { display: block; }
     .icon-close-desktop { display: none; }
 
-    /* FIX: MODAL BEZ BELE RUPE I BEZ ISECANJA */
     .product-modal, .product-modal.active { 
         top: 0 !important; 
         left: 0 !important; 
@@ -268,7 +268,7 @@ header {
         height: 100dvh; 
         padding: 0; 
         flex-direction: column; 
-        overflow: hidden; 
+        overflow-y: auto; /* CEO EKRAN SE SKROLA DA BI DUGME BILO NA KRAJU TEKSTA */
         border-radius: 0; 
         background: var(--bg-light);
     }
@@ -291,7 +291,7 @@ header {
     .modal-gallery { 
         width: 100%; 
         padding: 60px 0 10px; 
-        background: var(--bg-light); /* Beli background kao i slika */
+        background: var(--bg-light);
         flex-shrink: 0; 
     }
     .modal-main-pic { 
@@ -307,28 +307,28 @@ header {
     
     .modal-details { 
         width: 100%; 
-        padding: 15px 5% 100px 5%; 
+        /* FIX 2: SKLONJEN GIGANTSKI DONJI PADDING - TEKST VIŠE NE BEŽI GORE */
+        padding: 15px 5% 30px 5%; 
         flex: 1; 
-        overflow-y: auto; 
         position: relative;
         text-align: left;
     }
     .m-title { font-size: 1.8rem; margin-bottom: 8px; font-weight: 600; }
     .m-price { font-size: 1.3rem; margin-bottom: 20px; color: var(--accent-gold); }
-    .m-desc { font-size: 1rem; color: #444; line-height: 1.6; }
+    .m-desc { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 20px; }
     
-    /* FIX: NORMALNO PRAVOUGAONO DUGME ZAKUCANO ZA DNO EKRANA */
+    /* FIX 2: DUGME JE SADA FIKSIRANO U ODNOSU NA TEKST - ZNAČI TEKST SE NE SLADJUJE ISPOD */
     #m-add-btn { 
-        position: fixed; 
-        bottom: 20px; 
-        left: 5%; 
-        width: 90%; 
+        position: relative; 
+        bottom: auto; 
+        left: auto; 
+        width: 100%; 
         padding: 18px; 
         font-size: 1rem;
         z-index: 100; 
         border-radius: 4px; 
-        margin: 0;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+        margin-top: 20px; /* Malo mesta izmedju teksta i dugmeta */
+        box-shadow: none; /* Uklonjena iritantna senka */
     }
 
     .checkout-container { flex-direction: column; gap: 30px; }

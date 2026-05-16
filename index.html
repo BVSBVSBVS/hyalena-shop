@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
     <meta name="format-detection" content="telephone=no">
     <title>HYALENA | Cosmetic Line</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -365,13 +365,13 @@
             }
         }
 
-        // ==========================================
-        // NOVA LOGIKA ZA LISTANJE SLIKA U MODALU
-        // ==========================================
         let currentModalImages = [];
         let currentModalIndex = 0;
 
+        // FIX 4: ZAKLJUČAVANJE BODY SKROLA KAD SE OTVORI MODAL (DA NE SKAČE NA DNO)
         function openModal(id) {
+            document.body.style.overflow = 'hidden'; 
+            
             const item = productsDB[id];
             currentModalImages = item.images;
             currentModalIndex = 0;
@@ -413,7 +413,12 @@
             updateModalPic();
         }
 
-        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); document.getElementById('product-modal').classList.remove('active'); }
+        // Otključava skrol kad se zatvori
+        function closeModal() { 
+            document.body.style.overflow = '';
+            document.getElementById('modal-overlay').classList.remove('active'); 
+            document.getElementById('product-modal').classList.remove('active'); 
+        }
 
         function fastAdd(id) {
             let itemData = productsDB[id]; let existing = cart.find(item => item.id === id);
@@ -433,8 +438,17 @@
             document.getElementById('checkout-total-price').innerText = total.toLocaleString() + ' RSD'; document.getElementById('cart-total-price').innerText = total.toLocaleString() + ' RSD';
         }
 
-        function openCart() { document.getElementById('cart-overlay').classList.add('active'); document.getElementById('cart-drawer').classList.add('active'); }
-        function closeCart() { document.getElementById('cart-overlay').classList.remove('active'); document.getElementById('cart-drawer').classList.remove('active'); }
+        // Korpa i Login takođe zaključavaju body
+        function openCart() { 
+            document.body.style.overflow = 'hidden';
+            document.getElementById('cart-overlay').classList.add('active'); 
+            document.getElementById('cart-drawer').classList.add('active'); 
+        }
+        function closeCart() { 
+            document.body.style.overflow = '';
+            document.getElementById('cart-overlay').classList.remove('active'); 
+            document.getElementById('cart-drawer').classList.remove('active'); 
+        }
         
         function goToCheckout() { 
             if(cart.length === 0) return; 
@@ -445,6 +459,7 @@
         }
         
         function showMainView() { 
+            document.body.style.overflow = '';
             document.getElementById('checkout-view').style.display = 'none'; 
             document.getElementById('main-view').style.display = 'block'; 
             window.scrollTo(0, 0);
@@ -465,10 +480,16 @@
                     currentUser = null; localStorage.removeItem('hyalena_user'); document.getElementById('c-email').value = ''; customAlert("Uspešno ste se odjavili.");
                 }); return;
             }
-            document.getElementById('auth-overlay').classList.add('active'); document.getElementById('auth-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('auth-overlay').classList.add('active'); 
+            document.getElementById('auth-modal').classList.add('active');
         }
         
-        function closeAuthModal() { document.getElementById('auth-overlay').classList.remove('active'); document.getElementById('auth-modal').classList.remove('active'); }
+        function closeAuthModal() { 
+            document.body.style.overflow = '';
+            document.getElementById('auth-overlay').classList.remove('active'); 
+            document.getElementById('auth-modal').classList.remove('active'); 
+        }
         function toggleAuthMode() { isRegisterMode = !isRegisterMode; document.getElementById('auth-title').innerText = isRegisterMode ? "Registracija" : "Prijava"; document.getElementById('auth-btn').innerText = isRegisterMode ? "Registruj se" : "Prijavi se"; document.getElementById('auth-toggle').innerText = isRegisterMode ? "Imate nalog? Prijavite se ovde." : "Nemate nalog? Registrujte se ovde."; }
 
         async function handleAuth() {
@@ -531,8 +552,16 @@
         }
 
         function toggleMobileMenu() {
+            let drawer = document.getElementById('mobile-menu-drawer');
             document.getElementById('mobile-menu-overlay').classList.toggle('active');
-            document.getElementById('mobile-menu-drawer').classList.toggle('active');
+            drawer.classList.toggle('active');
+            
+            // Zaključava body kada je otvoren bočni meni
+            if (drawer.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         }
 
         function toggleMobileDropdown() {
@@ -543,6 +572,7 @@
 
         function resetToHome() {
             closeCart();
+            document.body.style.overflow = '';
             
             document.getElementById('checkout-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
@@ -560,6 +590,7 @@
 
         function filterIsolate(type) {
             closeCart();
+            document.body.style.overflow = '';
 
             document.getElementById('checkout-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
